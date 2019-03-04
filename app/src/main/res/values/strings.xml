@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">AirMoney</string>
+    <!-- Facebook application ID and custom URL scheme (app ID prefixed by 'fb'). -->
+    <string name="facebook_application_id" translatable="false">YOUR_APP_ID</string>
+    <string name="facebook_login_protocol_scheme" translatable="false">fbYOUR_APP_ID</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="Please_provide_your_email">Please Provide your email</string>
+    <string name="send_link">Send Link</string>
+    <string name="say_hi">Hi!</string>
+    <string name="logOut">Log out</string>
+    <string name="logging_out">Logging off</string>
+    <string name="logWithAnother">Log in with Another Account</string>
+    <string name="title_ledgeritem_list">ledgerItems</string>
+    <string name="title_ledgeritem_detail">ledgerItem Detail</string>
+</resources>

@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "82366117161",
+    "firebase_url": "https://vkreated-airmoney-f5de5.firebaseio.com",
+    "project_id": "vkreated-airmoney-f5de5",
+    "storage_bucket": "vkreated-airmoney-f5de5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:82366117161:android:c33355ee147c33dc",
+        "android_client_info": {
+          "package_name": "com.vkreated.airmoney"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "82366117161-hr8p6q05e9sujfso6drlms23fk9rvg02.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vkreated.airmoney",
+            "certificate_hash": "c367c5c7a9c4447e6c24c5da704c5aef724c5726"
+          }
+        },
+        {
+          "client_id": "82366117161-vnbapfh2spvmqllo40s6mvf9v5f7jct8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvW3ZMafoeXMbHkslxfdw9geU5ppcWFy4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "82366117161-vnbapfh2spvmqllo40s6mvf9v5f7jct8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
