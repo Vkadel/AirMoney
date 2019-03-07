@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddChildLedgerActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <include layout="@layout/content_add_child_ledger" />
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabAddChildDelete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:background="@color/colorPrimary"
+        app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabAddChildShare"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:background="@color/colorPrimary"
+        app:srcCompat="@android:drawable/ic_menu_share" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabAddChildUpload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        app:srcCompat="@android:drawable/ic_menu_upload" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabChildMoreActions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        app:srcCompat="@android:drawable/arrow_up_float" />
+
+    <TextView
+        style="@style/fab_buttons_style"
+        android:id="@+id/actionsLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:text="@string/actions"
+        app:layout_anchorGravity="bottom" />
+    <TextView
+        android:visibility="invisible"
+        android:text="@string/clear_child"
+        style="@style/fab_buttons_style"
+        android:id="@+id/clearChildLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        app:layout_anchorGravity="bottom" />
+    <TextView
+        android:visibility="invisible"
+        style="@style/fab_buttons_style"
+        android:id="@+id/shareChildLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/shareChild"
+        app:layout_anchorGravity="bottom" />
+    <TextView
+        android:visibility="invisible"
+        style="@style/fab_buttons_style"
+        android:id="@+id/uploadChild"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/upLoadChild"
+        app:layout_anchorGravity="bottom" />
+
+</android.support.design.widget.CoordinatorLayout>

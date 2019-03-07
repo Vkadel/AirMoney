@@ -2,9 +2,15 @@ package com.vkreated.airmoney;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -12,6 +18,7 @@ import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
+import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.credentials.CredentialRequest;
 import com.google.android.gms.auth.api.credentials.CredentialRequestResponse;
 import com.google.android.gms.auth.api.credentials.Credentials;
@@ -23,9 +30,15 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import org.json.JSONObject;
 
 import java.util.Arrays;
 import java.util.List;
+
+import data.user;
 
 public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
@@ -45,22 +58,57 @@ public class LoginActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         //Decide if new authentication is needed
         if(currentUser==null){
-            mCredentialsClient.disableAutoSignIn();
             authenticationKickoff();}
-
-        //Set up Log off and sign up with another account
-        Button logOffandLogWithAnother=findViewById(R.id.log_out_with_another);
-        logOffandLogWithAnother.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast toast=Toast.makeText(getApplication(),getResources().getString(R.string.logging_out),Toast.LENGTH_LONG);
-                logWithAnotherAccount();
-                authenticationKickoff();
-            }
-        });
-
+        //setting menu enabled
+        //TODO set This subtitle to Child name
+        getSupportActionBar().setSubtitle("subtitle");
     }
 
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Toast toast;
+        switch (item.getItemId()) {
+            case R.id.add_child:
+                //startActivity(new Intent(this, About.class));
+                toast=Toast.makeText(this,"I will add a child",Toast.LENGTH_SHORT);
+                toast.show();
+                Intent gotoChildLedgerSetup=new Intent(this,AddChildLedgerActivity.class);
+                gotoChildLedgerSetup.putExtra(AddChildLedgerActivity.USER_ID_LABEL,currentUser.getUid());
+                startActivity(gotoChildLedgerSetup);
+                return true;
+            case R.id.edit_child:
+                //startActivity(new Intent(this, Help.class));
+                toast=Toast.makeText(this,"I will edit this child",Toast.LENGTH_SHORT);
+                toast.show();
+                return true;
+            case R.id.help_menu:
+                //startActivity(new Intent(this, Help.class));
+                toast=Toast.makeText(this,"We will help you",Toast.LENGTH_SHORT);
+                toast.show();
+                return true;
+            case R.id.log_out:
+                //startActivity(new Intent(this, Help.class));
+                toast=Toast.makeText(getApplication(),getResources().getString(R.string.logging_out),Toast.LENGTH_LONG);
+                toast.show();
+                logWithAnotherAccount();
+                authenticationKickoff();
+                return true;
+            case R.id.sign_in:
+                //startActivity(new Intent(this, Help.class));
+                toast=Toast.makeText(getApplication(),getResources().getString(R.string.logging),Toast.LENGTH_LONG);
+                toast.show();
+                authenticationKickoff();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     //1. Kick off the FirebaseUI sign in flow, create a sign in intent with your preferred sign-in methods:
     void authenticationKickoff(){
@@ -122,12 +170,15 @@ public class LoginActivity extends AppCompatActivity {
             String firstName[]=fullName.split(" ");
             String hi_messssage= getResources().getText(R.string.say_hi)+"\n"+firstName[0];
             sayHiTV.setText(hi_messssage);
+            //TODO: Add check if user already exist
+            addUserOnDataBase(currentUser);
         }
     }
 
     void logWithAnotherAccount(){
         currentUser=null;
         mAuth=null;
+        sayHiTV.setText("");
         //Dissable autoCredentials to prevent the user from automatically get logged back in
         mCredentialsClient.disableAutoSignIn();
         CredentialRequest mCredentialRequest = new CredentialRequest.Builder()
@@ -144,4 +195,15 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+
+    //Adds the authenticaded user to the database unless it exists
+
+    void addUserOnDataBase(FirebaseUser currentUser){
+        // Write a message to the database
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("/users/"+currentUser.getUid());
+        user muser=new user(currentUser.getUid(),user.PARENT,currentUser.getDisplayName(),currentUser.getUid().toString(), currentUser.getEmail(),"0216512","");
+        myRef.setValue(muser);
+    }
+
 }
