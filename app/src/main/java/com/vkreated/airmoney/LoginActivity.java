@@ -2,38 +2,31 @@ package com.vkreated.airmoney;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
-import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.credentials.CredentialRequest;
 import com.google.android.gms.auth.api.credentials.CredentialRequestResponse;
 import com.google.android.gms.auth.api.credentials.Credentials;
-import com.google.android.gms.auth.api.credentials.CredentialsApi;
 import com.google.android.gms.auth.api.credentials.CredentialsClient;
-import com.google.android.gms.auth.api.credentials.CredentialsOptions;
-import com.google.android.gms.auth.api.credentials.IdentityProviders;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-import org.json.JSONObject;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Arrays;
 import java.util.List;
@@ -165,13 +158,14 @@ public class LoginActivity extends AppCompatActivity {
         sayHiTV=findViewById(R.id.say_hi);
         sayHiTV.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         sayHiTV.setVisibility(View.VISIBLE);
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
         if(currentUser!=null){
             String fullName=currentUser.getDisplayName();
             String firstName[]=fullName.split(" ");
             String hi_messssage= getResources().getText(R.string.say_hi)+"\n"+firstName[0];
             sayHiTV.setText(hi_messssage);
             //TODO: Add check if user already exist
-            addUserOnDataBase(currentUser);
+            checkIfUserExistAndSetUp(database,currentUser);
         }
     }
 
@@ -196,14 +190,43 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+   //This method Checks if the user exists before trying to add it.
+    //Otherwise user information will get overwritten
+    void checkIfUserExistAndSetUp(FirebaseDatabase database, FirebaseUser currentUser){
+        final DatabaseReference myRef = database.getReference(getResources().getString(R.string.firebase_ref_user)+currentUser.getUid());
+        final FirebaseUser mcurrentUser=currentUser;
+        boolean userExist=false;
+        // Read from the database
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                user mUser = dataSnapshot.getValue(user.class);
+
+                //Only add the user if the user does not exist
+                if(mUser==null){
+                addUserOnDataBase(mcurrentUser);}
+                myRef.removeEventListener(this);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w(TAG, "Failed to read value.", error.toException());
+                myRef.removeEventListener(this);
+            }
+        });
+        }
+
     //Adds the authenticaded user to the database unless it exists
 
     void addUserOnDataBase(FirebaseUser currentUser){
         // Write a message to the database
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("/users/"+currentUser.getUid());
+        DatabaseReference myRef = database.getReference(getResources().getString(R.string.firebase_ref_user)+currentUser.getUid());
+
         user muser=new user(currentUser.getUid(),user.PARENT,currentUser.getDisplayName(),currentUser.getUid().toString(), currentUser.getEmail(),"0216512","");
         myRef.setValue(muser);
     }
-
 }

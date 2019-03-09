@@ -35,6 +35,7 @@ public class user {
         this.mledger_id=ledger_id;
         this.mchildren=children;
     }
+    public user(){}
 
     public void setMauthid(String mauthid) {
         this.mauthid = mauthid;

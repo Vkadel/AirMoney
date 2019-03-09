@@ -3,6 +3,9 @@
     <!-- Facebook application ID and custom URL scheme (app ID prefixed by 'fb'). -->
     <string name="facebook_application_id" translatable="false">YOUR_APP_ID</string>
     <string name="facebook_login_protocol_scheme" translatable="false">fbYOUR_APP_ID</string>
+    <!-- Node Ref base -->
+    <string name="firebase_ref_user">/user/</string>
+    <string name="firebase_ref_child_ledger">/childrenledgers/</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="Please_provide_your_email">Please Provide your email</string>
@@ -99,5 +102,5 @@
     <string name="actions">Actions ---></string>
     <string name="clear_child">Clear</string>
     <string name="shareChild">Share this Child</string>
-    <string name="upLoadChild">Upload Child</string>
+    <string name="AddChild">Add Child</string>
 </resources>

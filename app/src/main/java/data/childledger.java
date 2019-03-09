@@ -40,4 +40,24 @@ public class childledger {
     public void setMparentowners(String mparentowners) {
         this.mparentowners = mparentowners;
     }
+
+    public int getMledgerid() {
+        return mledgerid;
+    }
+
+    public int getMledgetotal() {
+        return mledgetotal;
+    }
+
+    public String getMchildid() {
+        return mchildid;
+    }
+
+    public String getMchildname() {
+        return mchildname;
+    }
+
+    public String getMparentowners() {
+        return mparentowners;
+    }
 }

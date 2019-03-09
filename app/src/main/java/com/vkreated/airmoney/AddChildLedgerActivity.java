@@ -92,7 +92,7 @@ String childId;
         floatingActionButtonUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-             addChildLedgerToOnlineDatabase(currentUserId,childName.toString());
+             addChildLedgerToOnlineDatabase(currentUserId,childName.getText().toString());
             }
         });
 
@@ -151,35 +151,39 @@ String childId;
         });
     }
 
-    void addChildLedgerToOnlineDatabase(String currentUserId,String childName){
+    void addChildLedgerToOnlineDatabase(final String currentUserId, String childName){
         // Write a message to the database
         final String userid=currentUserId;
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        final DatabaseReference myRef = database.getReference("/users/"+currentUserId+"/mchildren");
+        final String mchildName=childName;
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        final DatabaseReference myRef = database.getReference(getResources().getString(R.string.firebase_ref_user)+currentUserId+"/mchildren");
         // Read from the database
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
+                Toast toast;
                 String valueChildrenString = dataSnapshot.getValue(String.class);
                 String []childrenMatrixConversionArray=valueChildrenString.split(",");
                 //Add First Child
                 if (valueChildrenString.equals("")||valueChildrenString==null||childrenMatrixConversionArray.length==0){
-                    Toast toast;
+                    setUpChildLedger("0",mchildName,currentUserId);
+                    myRef.setValue(userid+"0");
+                    myRef.removeEventListener(this);
                     toast=Toast.makeText(getApplication(),"this is the first Child added",Toast.LENGTH_LONG);
                     toast.show();
-                    myRef.setValue(userid+childrenMatrixConversionArray.length);
-                    myRef.removeEventListener(this);
-
                 }
                 //Add more children
                 else{
-                    myRef.setValue(valueChildrenString+","+userid,childrenMatrixConversionArray.length+1);
+                    setUpChildLedger(String.valueOf(childrenMatrixConversionArray.length),mchildName,currentUserId);
+                    myRef.setValue(valueChildrenString+","+userid+String.valueOf(childrenMatrixConversionArray.length));
                     myRef.removeEventListener(this);
-
+                    toast=Toast.makeText(getApplication(),"this is the number"+(childrenMatrixConversionArray.length+1)+"Child added",Toast.LENGTH_LONG);
+                    toast.show();
                 }
                 Log.d(TAG, "Value is: " + valueChildrenString);
+
             }
 
             @Override
@@ -188,8 +192,13 @@ String childId;
                 Log.w(TAG, "Failed to read value.", error.toException());
             }
         });
-        DatabaseReference myRefchild = database.getReference("/childledger/"+currentUserId);
-        //childledger mChildLedger=new childledger(id,currentUserId, childName, childName, 0);
-        //myRefchild.setValue(muser);
+
+    }
+
+    void setUpChildLedger(String append,String chilname,String currentUserId){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        childledger childledgerToAdd=new childledger(Integer.valueOf(append),currentUserId,"",chilname,0);
+        DatabaseReference myRefChildLedger = database.getReference(getResources().getString(R.string.firebase_ref_child_ledger)+currentUserId+append);
+        myRefChildLedger.setValue(childledgerToAdd);
     }
 }
