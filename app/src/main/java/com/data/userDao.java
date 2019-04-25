@@ -1,4 +1,4 @@
-package data;
+package com.data;
 
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
@@ -9,15 +9,15 @@ import android.arch.persistence.room.Query;
 import java.util.List;
 
 @Dao
-public interface ledgerItemDao {
-    @Query("SELECT * FROM ledgeritem_table")
-    public abstract android.arch.paging.DataSource.Factory<Integer,ledgeritem> getAll();
+public interface userDao {
+    @Query("SELECT * FROM user_table")
+    public abstract android.arch.paging.DataSource.Factory<Integer, user> getAll();
 
 
-    @Query("SELECT * FROM ledgeritem_table WHERE mledgeritemid IN (:id)")
+    @Query("SELECT * FROM user_table WHERE mid IN (:id)")
     List<user> loadAllbyID(int[] id);
 
-    @Query("SELECT * FROM ledgeritem_table WHERE mledgeritemid IN (:id)")
+    @Query("SELECT * FROM user_table WHERE mid IN (:id)")
     user loadOnebyID(int id);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

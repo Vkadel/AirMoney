@@ -12,7 +12,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.vkreated.airmoney"
-        minSdkVersion 17
+        minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -47,6 +47,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation 'com.google.firebase:firebase-core:16.0.7'
+    implementation 'com.google.firebase:firebase-dynamic-links:16.1.7'
 
     //Authentication Dependencies
     implementation 'com.firebaseui:firebase-ui-auth:4.3.1'
@@ -55,10 +56,10 @@ dependencies {
     // Required only if Facebook login support is required
     // Find the latest Facebook SDK releases here: https://goo.gl/Ce5L94
     implementation 'com.facebook.android:facebook-android-sdk:4.40.0'
-    implementation 'com.google.firebase:firebase-database:16.0.6'
+    implementation 'com.google.firebase:firebase-database:16.1.0'
     implementation "android.arch.persistence.room:runtime:$room_version"
     implementation 'com.google.code.gson:gson:2.8.5'
     //Paging library
-    implementation 'android.arch.paging:runtime:1.0.0'
+    implementation 'android.arch.paging:runtime:1.0.1'
 }
 apply plugin: 'com.google.gms.google-services'

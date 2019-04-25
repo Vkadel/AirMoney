@@ -35,6 +35,7 @@
     </style>
 
     <style name="labels_style">
+        <item name="android:layout_margin">8dp</item>
         <item name="android:textSize">18sp</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:textColor">@color/blackColor</item>
@@ -47,8 +48,12 @@
         <item name="android:clickable">false</item>
         <item name="android:fontFamily">cursive</item>
         <item name="android:includeFontPadding">true</item>
-        <item name="android:textSize">32sp</item>
+        <item name="android:textSize">24sp</item>
 
+    </style>
+
+    <style name="labels_style_small">
+        <item name="android:layout_margin">8dp</item>
     </style>
 
 </resources>

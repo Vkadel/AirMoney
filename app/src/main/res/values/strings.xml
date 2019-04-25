@@ -7,7 +7,7 @@
     <string name="firebase_ref_user">/user/</string>
     <string name="firebase_ref_child_ledger">/childrenledgers/</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
+
     <string name="Please_provide_your_email">Please Provide your email</string>
     <string name="send_link">Send Link</string>
     <string name="say_hi">Hi! </string>
@@ -19,8 +19,15 @@
     <string name="goToChildLedger">Go to child ledger</string>
     <string name="title_activity_settings">Settings</string>
 
-    <!-- Strings related to Settings -->
+    <string-array name="spinner_for_add_child_unit">
+        <item>Please Select a type of ledger</item>
+        <item>Money</item>
+        <item>Time</item>
+        <item>Other</item>
+    </string-array>
 
+    <!-- Strings related to Settings -->
+    <!-- TODO: Remove or change this placeholder text -->
     <!-- Example General settings -->
     <string name="pref_header_general">General</string>
 
@@ -102,5 +109,15 @@
     <string name="actions">Actions ---></string>
     <string name="clear_child">Clear</string>
     <string name="shareChild">Share this Child</string>
-    <string name="AddChild">Add Child</string>
+    <string name="AddChild">Add child to account</string>
+    <string name="select_unit_for_this_child_ledger">Select Unit for this child ledger</string>
+    <string name="please_add_name_and_ledger">Please make sure to add a name and to select atype of ledger</string>
+    <string name="please_add_name_and_ledger_upload">Before sharing make sure the child ledger exist by uploading</string>
+    <string name="have_internet">App has internet access</string>
+    <string name="lost_connection">App does not have internet access</string>
+    <string name="succesful_child_set_up">We have set up the child: %s</string>
+    <string name="mtrue">true</string>
+    <string name="sentShared">Shared Child Succesfully</string>
+    <string name="title_activity_children_ledger">ChildrenLedgerActivity</string>
+    <string name="user_id_key" translatable="false">auth_user_id</string>
 </resources>

@@ -1,4 +1,4 @@
-package data;
+package com.data;
 
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
@@ -6,8 +6,11 @@ import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 
-@Database(entities = user.class, version = 2, exportSchema = false)
-@TypeConverters({})
+import com.converters.dateConverter;
+import com.converters.stringArrayToString;
+
+@Database(entities = user.class, version = 1, exportSchema = false)
+@TypeConverters({dateConverter.class, stringArrayToString.class})
 
 public abstract class UserAppDatabase extends RoomDatabase {
     public abstract userDao userDao();
