@@ -72,19 +72,21 @@ public class LoginActivity extends AppCompatActivity {
         mActivity=this;
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
+
         //Check if returning from another activity
         if(getIntent().hasExtra(AddChildLedgerActivity.CURRENT_USER_ID)){
         currentUserAuthenticatedID=getIntent().getStringExtra(AddChildLedgerActivity.CURRENT_USER_ID);}
 
+
         //Decide if new authentication is needed
-        if (currentUser == null && currentUserAuthenticatedID==null) {
+        if ((currentUser == null && currentUserAuthenticatedID==null)||mAuth.getCurrentUser()==null) {
             authenticationKickoff();
         }
         else{
             //GetAuthenticated User
             currentUser=mAuth.getCurrentUser();
+            setUpActionBar(currentUser);
         }
-        setUpActionBar(currentUser);
 
         goToLedgersBut.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -158,9 +160,11 @@ public class LoginActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-        if (mAuth != null) {
+        if (mAuth != null && mAuth.getCurrentUser()!=null) {
             currentUser = mAuth.getCurrentUser();
             updateUI(currentUser);
+        }else{
+            authenticationKickoff();
         }
     }
 
@@ -173,12 +177,14 @@ public class LoginActivity extends AppCompatActivity {
             IdpResponse response = IdpResponse.fromResultIntent(data);
 
             if (resultCode == RESULT_OK) {
+                sendLongToast(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
                 // Successfully signed in
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 Log.e(TAG, "this user: " + user.getDisplayName());
                 updateUI(user);
                 // ...
             } else {
+                sendLongToast("login has failed");
                 // Sign in failed. If response is null the user canceled the
                 // sign-in flow using the back button. Otherwise check
                 // response.getError().getErrorCode() and handle the error.
@@ -201,7 +207,7 @@ public class LoginActivity extends AppCompatActivity {
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()
                         .setAvailableProviders(providers)
-                        .setLogo(R.drawable.place_holder_image_logo)
+                        .setLogo(R.drawable.place_holder_image_logo).setIsSmartLockEnabled(true)
                         .build(),
                 RC_SIGN_IN);
     }
@@ -332,6 +338,7 @@ public class LoginActivity extends AppCompatActivity {
         final String thisChildLedger=sharedledger;
         final String userid = currentUser.getUid();
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        //TODO: Change /mchildren to Stringed ref
         final DatabaseReference myRef = database.getReference(getResources().getString(R.string.firebase_ref_user) + userid + "/mchildren/"+sharedledger);
 
         myRef.addValueEventListener(new ValueEventListener() {
@@ -359,7 +366,6 @@ public class LoginActivity extends AppCompatActivity {
         final String userid = currentUser.getUid();
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         final DatabaseReference myRef = database.getReference(getResources().getString(R.string.firebase_ref_user) + userid + "/sharedwithme/");
-        final DatabaseReference myRefKeys = database.getReference(getResources().getString(R.string.firebase_ref_user) + userid + "/sharedwithme/");
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

@@ -15,7 +15,7 @@
       },
       "oauth_client": [
         {
-          "client_id": "82366117161-hr8p6q05e9sujfso6drlms23fk9rvg02.apps.googleusercontent.com",
+          "client_id": "82366117161-u9ldkhm84enftaa25sfki4c9p896ctmq.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.vkreated.airmoney",
@@ -33,20 +33,13 @@
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 2,
           "other_platform_oauth_client": [
             {
               "client_id": "82366117161-vnbapfh2spvmqllo40s6mvf9v5f7jct8.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
-        },
-        "ads_service": {
-          "status": 2
         }
       }
     }

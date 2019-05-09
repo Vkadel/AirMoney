@@ -1,8 +1,10 @@
 <resources>
     <string name="app_name">AirMoney</string>
     <!-- Facebook application ID and custom URL scheme (app ID prefixed by 'fb'). -->
-    <string name="facebook_application_id" translatable="false">YOUR_APP_ID</string>
-    <string name="facebook_login_protocol_scheme" translatable="false">fbYOUR_APP_ID</string>
+    <string name="facebook_app_id">371397113475275</string>
+    <string name="facebook_application_id">371397113475275</string>
+    <string name="fb_login_protocol_scheme">fb371397113475275</string>
+
     <!-- Node Ref base -->
     <string name="firebase_ref_user">/user/</string>
     <string name="firebase_ref_child_ledger">/childrenledgers/</string>
@@ -117,7 +119,11 @@
     <string name="lost_connection">App does not have internet access</string>
     <string name="succesful_child_set_up">We have set up the child: %s</string>
     <string name="mtrue">true</string>
-    <string name="sentShared">Shared Child Succesfully</string>
+    <string name="sentShared">Shared Child Successfully</string>
     <string name="title_activity_children_ledger">ChildrenLedgerActivity</string>
     <string name="user_id_key" translatable="false">auth_user_id</string>
+    <string name="firebase_ref_mchildren">/mchildren</string>
+    <string name="this_child_has_this_much">Current amount available for this child</string>
+    <string name="currency">$</string>
+    <string name="MyName">MychildName</string>
 </resources>

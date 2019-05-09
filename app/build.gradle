@@ -8,11 +8,17 @@ android {
             storeFile file('C:/Users/Virginia/Documents/Android/Keys/airMoneyKey.jks')
             storePassword 'gabriel22'
         }
+        debug {
+            storeFile file('C:\\Users\\Virginia\\Documents\\Android\\Keys\\airMoneyKey.jks')
+            storePassword 'gabriel22'
+            keyAlias = 'key0'
+            keyPassword 'gabriel22'
+        }
     }
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.vkreated.airmoney"
-        minSdkVersion 21
+        minSdkVersion 26
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -38,28 +44,31 @@ dependencies {
     def room_version = "1.1.1"
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:28.0.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    implementation 'com.android.support.constraint:constraint-layout:2.0.0-alpha5'
     implementation 'com.android.support:support-v4:28.0.0'
     implementation 'com.android.support:recyclerview-v7:28.0.0'
     implementation 'com.android.support:design:28.0.0'
     implementation 'com.android.support:support-vector-drawable:28.0.0'
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.13-beta-2'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    implementation 'com.google.firebase:firebase-core:16.0.7'
-    implementation 'com.google.firebase:firebase-dynamic-links:16.1.7'
+    implementation 'com.google.firebase:firebase-core:16.0.8'
+    implementation 'com.google.firebase:firebase-dynamic-links:16.1.8'
 
     //Authentication Dependencies
     implementation 'com.firebaseui:firebase-ui-auth:4.3.1'
+    implementation 'com.firebaseui:firebase-ui-database:3.1.3'
     implementation 'com.google.android.gms:play-services-auth:16.0.1'
 
     // Required only if Facebook login support is required
     // Find the latest Facebook SDK releases here: https://goo.gl/Ce5L94
-    implementation 'com.facebook.android:facebook-android-sdk:4.40.0'
+    implementation 'com.facebook.android:facebook-android-sdk:5.0.0'
     implementation 'com.google.firebase:firebase-database:16.1.0'
     implementation "android.arch.persistence.room:runtime:$room_version"
     implementation 'com.google.code.gson:gson:2.8.5'
     //Paging library
     implementation 'android.arch.paging:runtime:1.0.1'
+    implementation 'android.arch.lifecycle:extensions:1.1.1'
+    implementation 'org.jetbrains:annotations-java5:15.0'
 }
 apply plugin: 'com.google.gms.google-services'
