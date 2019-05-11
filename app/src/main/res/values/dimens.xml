@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="ledger_id_w">130dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="app_bar_height">200dp</dimen>
     <dimen name="item_width">200dp</dimen>
     <dimen name="text_margin">16dp</dimen>
     <dimen name="text_hi_size">24sp</dimen>
     <dimen name="logo_size_small">160dp</dimen>
-    <dimen name="child_ledger_padding">8dp</dimen>
+    <dimen name="child_ledger_padding">4dp</dimen>
+    <dimen name="div_thickness">1dp</dimen>
+    <dimen name="ledger_id_name_w">95dp</dimen>
 </resources>

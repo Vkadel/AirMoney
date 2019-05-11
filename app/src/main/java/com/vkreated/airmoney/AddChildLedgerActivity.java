@@ -307,7 +307,7 @@ public class AddChildLedgerActivity extends AppCompatActivity implements Adapter
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         Map<String, String> mparentowners= new HashMap<>();
         mparentowners.put(currentUserId,getResources().getString(R.string.mtrue));
-        childledger childledgerToAdd = new childledger(Integer.valueOf(append),mparentowners,"", childname, 0,typeOfledgerSelected,null);
+        childledger childledgerToAdd = new childledger(Integer.valueOf(append),mparentowners,"", childname, 0,typeOfledgerSelected,null,null);
         DatabaseReference myRefChildLedger = database.getReference(getResources().getString(R.string.firebase_ref_child_ledger) + currentUserId + append+childName+typeOfledgerSelected);
         myRefChildLedger.setValue(childledgerToAdd);
         //Add this Parent to child owners

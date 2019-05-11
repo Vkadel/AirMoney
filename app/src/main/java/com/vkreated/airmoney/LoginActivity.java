@@ -58,6 +58,7 @@ public class LoginActivity extends AppCompatActivity {
     private Uri mInvitationUrl;
     private Activity mActivity;
     private Button goToLedgersBut;
+    private FirebaseDatabase myDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,12 +92,16 @@ public class LoginActivity extends AppCompatActivity {
         goToLedgersBut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //TODO: Check if user has children Ledgers before sending and ask to create one
                 //go to activity with list of ledgers will be listed
                 Intent intent=new Intent(getApplicationContext(), ChildrenLedgerListActivity.class);
                 intent.putExtra(getResources().getString(R.string.user_id_key),mAuth.getUid());
                 startActivity(intent);
             }
         });
+
+        //Set up local storage to avoid downloading information that has not changed
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
     }
 

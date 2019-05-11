@@ -20,21 +20,39 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_children_ledger_list" />
+    <!--TODO:Add paddignto dimens-->
+    <LinearLayout
+        android:paddingTop="69dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <include layout="@layout/content_children_ledger_list" />
+
+        <FrameLayout
+            android:background="@color/colorPrimary"
+            android:id="@+id/ledgeritems_list_fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="3" />
+
+
+    </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/add_child_ledger_item_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+
+        app:srcCompat="@android:drawable/ic_input_add" />
+
     <TextView
-        android:layout_gravity="bottom|start"
         android:id="@+id/text_tv"
-        android:textSize="20sp"
-        android:text="Initial Test"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:text="Initial Test"
+        android:textSize="20sp" />
 
 </android.support.design.widget.CoordinatorLayout>

@@ -1,48 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
+    android:layout_width="@dimen/ledger_id_w"
+    android:layout_height="@dimen/ledger_id_w"
+    android:orientation="horizontal"
     android:id="@+id/my_child_ledgername_layout">
 
-    <TextView
-        android:id="@+id/child_ledger_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/child_ledger_padding"
-        android:text="@string/MyName" />
-
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_weight="20"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <TextView
-            android:layout_weight="2"
-            android:id="@+id/child_ledger_total_label"
-            android:layout_width="wrap_content"
+            android:paddingLeft="@dimen/child_ledger_padding"
+            android:paddingRight="@dimen/child_ledger_padding"
+            android:textAlignment="center"
+            android:layout_gravity="center"
+            android:id="@+id/child_ledger_name"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/child_ledger_padding"
-            android:text="@string/this_child_has_this_much" />
+            android:text="@string/MyName" />
 
-        <TextView
-            android:id="@+id/currency_symbol"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/child_ledger_padding"
-            android:text="@string/currency" />
+            android:orientation="horizontal">
 
-        <TextView
-            android:layout_weight="2"
-            android:id="@+id/child_ledger_total"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/child_ledger_padding"
-            android:text="00" />
+
+            <TextView
+                android:textAlignment="textEnd"
+                android:layout_weight="1"
+                android:id="@+id/currency_symbol"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/child_ledger_padding"
+                android:text="@string/currency" />
+
+
+            <TextView
+                android:textAlignment="textStart"
+                android:id="@+id/child_ledger_total"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:padding="@dimen/child_ledger_padding"
+                android:text="000000" />
+
+        </LinearLayout>
+
     </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/blackColor" />
+<View
+    android:layout_weight="1"
+    android:layout_gravity="end"
+    android:background="@color/blackColor"
+    android:layout_width="@dimen/div_thickness"
+    android:layout_height="match_parent"/>
 </LinearLayout>

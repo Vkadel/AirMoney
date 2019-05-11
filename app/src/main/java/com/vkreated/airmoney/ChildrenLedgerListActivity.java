@@ -2,19 +2,16 @@ package com.vkreated.airmoney;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.arch.paging.PagedListAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -26,7 +23,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.data.FirebaseLiveDataLedgers;
-import com.data.LedgerIdAtParent;
 import com.google.firebase.database.DataSnapshot;
 import com.intentservices.Constants;
 import com.intentservices.GetLedgersIntentService;
@@ -42,7 +38,8 @@ public class ChildrenLedgerListActivity extends AppCompatActivity {
     ChildrenLedgerAdapter adapter;
     DownloadStateReceiver downloadStateReceiver;
     TextView myTestTv;
-
+    FragmentManager mFragmentManager;
+    static String selectedItemID="";
     @Override
     protected void onDestroy() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(downloadStateReceiver);
@@ -56,14 +53,22 @@ public class ChildrenLedgerListActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         myTestTv=findViewById(R.id.text_tv);
-        FloatingActionButton fab = findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.add_child_ledger_item_fab);
         final List<String> myIteration=new ArrayList<>();
-        adapter=new ChildrenLedgerAdapter(myIteration);
+        mFragmentManager=getSupportFragmentManager();
+        adapter=new ChildrenLedgerAdapter(myIteration,this,mFragmentManager);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                if(!(selectedItemID.equals(null)||selectedItemID.isEmpty()||selectedItemID=="")){
+                    Intent intent=new Intent(getApplicationContext(),AddChildLedgerItem.class);
+                    intent.putExtra(ledgerItemListFragment.ARG_LEDGER_ID,selectedItemID);
+                    startActivity(intent);
+
+                }else{
+                    sendLongToast(getApplicationContext(),getResources().getString(R.string.please_select_a_ledger));
+                }
             }
         });
 
@@ -92,15 +97,19 @@ public class ChildrenLedgerListActivity extends AppCompatActivity {
                         }
                     });
                     adapter.notifyDataSetChanged();
-                   //TODO: Pull each ledger may need to save in local database use Service
+
+
                 }
         });
         recyclerView.setAdapter(adapter);
+
     }
 
 
     public static class ChildrenLedgerAdapter extends RecyclerView.Adapter<ChildrenLedgerAdapter.MyViewHolder> {
         List<String> mDataset;
+        Context mContext;
+        FragmentManager fragmentManager;
 
         // Provide a reference to the views for each data item
         // Complex data items may need more than one view per item, and
@@ -115,8 +124,10 @@ public class ChildrenLedgerListActivity extends AppCompatActivity {
         }
 
         // Provide a suitable constructor (depends on the kind of dataset)
-        public ChildrenLedgerAdapter(List<String> myDataset) {
+        public ChildrenLedgerAdapter(List<String> myDataset,Context context,FragmentManager manager) {
             mDataset = myDataset;
+            mContext= context;
+            fragmentManager=manager;
         }
 
         // Create new views (invoked by the layout manager)
@@ -127,15 +138,32 @@ public class ChildrenLedgerListActivity extends AppCompatActivity {
             View v =  LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.child_ledger_for_list, parent, false);
             MyViewHolder vh = new MyViewHolder(v);
+
             return vh;
         }
 
-        // Replace the contents of a view (invoked by the layout manager)
+        // Replace the c ontents of a view (invoked by the layout manager)
         @Override
-        public void onBindViewHolder(MyViewHolder holder, int position) {
+        public void onBindViewHolder(final MyViewHolder holder, int position) {
             // - get element from your dataset at this position
             // - replace the contents of the view with that element
+            final int positionFinal=position;
             holder.textView.setText(mDataset.get(position));
+            holder.textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //Generate the fragment and attach it to the frame
+                    selectedItemID=mDataset.get(positionFinal);
+                    Log.d(TAG,"this item was selected:"+selectedItemID);
+                    Bundle arguments = new Bundle();
+                    arguments.putString(ledgerItemListFragment.ARG_LEDGER_ID, mDataset.get(positionFinal));
+                    ledgerItemListFragment fragment = new ledgerItemListFragment();
+                    fragment.setArguments(arguments);
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.ledgeritems_list_fragment_container, fragment)
+                            .commit();
+                }
+            });
 
         }
 
@@ -160,7 +188,7 @@ public class ChildrenLedgerListActivity extends AppCompatActivity {
                     //android.os.Debug.waitForDebugger();
                     sendLongToast(mContext,"Recieved broadcast from Service + "+intent.getStringExtra(Constants.mMESSAGE));
                     Log.e(TAG,"Received broadcast from Service");
-                    myTestTv.setText(intent.getStringExtra(Constants.EXTENDED_DATA_STATUS));
+                    myTestTv.setText(intent.getStringExtra(Constants.RESULT_OF_SERVICE));
                 }
 
     }
@@ -169,7 +197,10 @@ public class ChildrenLedgerListActivity extends AppCompatActivity {
     private void startService()
     {
         Intent serviceIntent = new Intent();
-        serviceIntent.putExtra("download_url", "http");
+        //Start service to download the data for each ledger
+        //Pass the LedgerID you want to download
+        serviceIntent.setAction(Constants.mAction_GET_LEDGER_ACTION);
+        serviceIntent.putExtra(Constants.mAction_GET_LEDGER_DATA,"myLedger");
         // Starts the JobIntentService
         final int RSS_JOB_ID = 1000;
         GetLedgersIntentService service=new GetLedgersIntentService();
@@ -191,7 +222,7 @@ public class ChildrenLedgerListActivity extends AppCompatActivity {
                 statusIntentFilter);
     }
 
-    private void sendLongToast(Context context,String message)
+    public void sendLongToast(Context context,String message)
     {
         Toast toast=Toast.makeText(context,message,Toast.LENGTH_SHORT);
         TextView v = (TextView) toast.getView().findViewById(android.R.id.message);

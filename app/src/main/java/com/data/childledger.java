@@ -3,7 +3,9 @@ package com.data;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverters;
+import android.support.annotation.Nullable;
 
+import java.util.List;
 import java.util.Map;
 
 import com.converters.dateConverter;
@@ -20,9 +22,10 @@ public class childledger {
     private int mledgetotal;//may exclude from data to post to server and my want to have only at app level
     private String munit;
     private Map<String, String> mSharedKeys;
+    private Map<String,String> mchilLedgerItems;
 
 
-    public childledger(int id, Map<String, String> parentowners, String childid, String childname, int ledgetotal,String unit,Map<String, String> sharedwith){
+    public childledger(int id, Map<String, String> parentowners, String childid, String childname, int ledgetotal, String unit, Map<String, String> sharedwith, Map<String,String> chilLedgerItems ){
         this.mledgerid =id;
         mparentowners=parentowners;
         mchildid=childid;
@@ -30,6 +33,7 @@ public class childledger {
         mledgetotal=ledgetotal;
         munit=unit;
         mSharedKeys =sharedwith;
+        mchilLedgerItems=chilLedgerItems;
     }
     public childledger(int id, String childid, String childname, int ledgetotal,String unit,Map<String, String> sharedwith){
         this.mledgerid =id;
@@ -38,6 +42,19 @@ public class childledger {
         mledgetotal=ledgetotal;
         munit=unit;
         mSharedKeys =sharedwith;
+    }
+
+    public Map<String, String> getMchilLedgerItems() {
+        return mchilLedgerItems;
+    }
+
+    public void setMchilLedgerItems(Map<String, String> mchilLedgerItems) {
+        this.mchilLedgerItems = mchilLedgerItems;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        return super.equals(obj);
     }
 
     public childledger(){}

@@ -6,9 +6,17 @@
     <string name="fb_login_protocol_scheme">fb371397113475275</string>
 
     <!-- Node Ref base -->
-    <string name="firebase_ref_user">/user/</string>
-    <string name="firebase_ref_child_ledger">/childrenledgers/</string>
+    <string name="firebase_ref_user" translatable="false">/user/</string>
+    <string name="firebase_ref_child_ledger" translatable="false">/childrenledgers/</string>
+    <string name="firebase_ref_mchildren" translatable="false">/mchildren</string>
+    <string name="firebase_ref_mchildren_mchilLedgerItems" translatable="false">/mchilLedgerItems/</string>
 
+    <!-- Node Key base -->
+    <string name="user_id_key" translatable="false">auth_user_id</string>
+    <string name="firebase_key_user" translatable="false">user</string>
+    <string name="firebase_key_child_ledger" translatable="false">childrenledgers</string>
+    <string name="firebase_key_mchildren" translatable="false">mchildren</string>
+    <string name="firebase_key_mchildren_mchilLedgerItems" translatable="false">mchilLedgerItems</string>
 
     <string name="Please_provide_your_email">Please Provide your email</string>
     <string name="send_link">Send Link</string>
@@ -121,9 +129,13 @@
     <string name="mtrue">true</string>
     <string name="sentShared">Shared Child Successfully</string>
     <string name="title_activity_children_ledger">ChildrenLedgerActivity</string>
-    <string name="user_id_key" translatable="false">auth_user_id</string>
-    <string name="firebase_ref_mchildren">/mchildren</string>
+
     <string name="this_child_has_this_much">Current amount available for this child</string>
     <string name="currency">$</string>
     <string name="MyName">MychildName</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="direction_plus">+</string>
+    <string name="please_select_a_ledger">Please select or create a child ledger to add this item to</string>
 </resources>

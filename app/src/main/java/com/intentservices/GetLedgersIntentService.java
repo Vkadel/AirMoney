@@ -1,33 +1,10 @@
 package com.intentservices;
 
-import android.app.IntentService;
-import android.arch.lifecycle.ViewModelProvider;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.os.Binder;
-import android.os.IBinder;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.JobIntentService;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-import android.view.Gravity;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.data.FirebaseLiveDataLedgers;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.viewmodels.ledgersViewModel;
-import com.vkreated.airmoney.ChildrenLedgerListActivity;
-import com.vkreated.airmoney.R;
-
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 
 public class GetLedgersIntentService extends JobIntentService {
@@ -44,6 +21,7 @@ public class GetLedgersIntentService extends JobIntentService {
         //android.os.Debug.waitForDebugger();
 
         String dataString = intent.getDataString();
+        String myvariableLedger=intent.getStringExtra(Constants.mAction_GET_LEDGER_DATA);
         Log.e(TAG,"got Inside Service");
         //Actual action to perform
 
@@ -51,14 +29,23 @@ public class GetLedgersIntentService extends JobIntentService {
          * Creates a new Intent containing a Uri object
          * BROADCAST_ACTION is a custom Intent action
          */
-        String status="mystatus";
+        String result="mystatus";
+        switch (intent.getAction()){
+            case Constants.mAction_GET_LEDGER_ACTION:
+                //Send Request to get
+                Log.d(TAG,"got Action to download data");
+        }
+
+
         Intent localIntent = new Intent(Constants.BROADCAST_ACTION)
-                        // Puts the status into the Intent
-                        .putExtra(Constants.EXTENDED_DATA_STATUS, status);
+                        // Puts the result into the Intent
+                        .putExtra(Constants.RESULT_OF_SERVICE, result);
+
         // Broadcasts the Intent to receivers in this app.
         intent.putExtra(Constants.mMESSAGE,"I love sending messages");
         LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
         Log.e(TAG,"Sent broadcast");
+
     }
 
 }
