@@ -6,6 +6,11 @@ import android.support.v4.app.JobIntentService;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import com.google.gson.Gson;
+
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class GetLedgersIntentService extends JobIntentService {
 
@@ -22,6 +27,11 @@ public class GetLedgersIntentService extends JobIntentService {
 
         String dataString = intent.getDataString();
         String myvariableLedger=intent.getStringExtra(Constants.mAction_GET_LEDGER_DATA);
+
+        Gson mjson=new Gson();
+
+        HashMap<String,String> map;
+
         Log.e(TAG,"got Inside Service");
         //Actual action to perform
 
@@ -39,7 +49,7 @@ public class GetLedgersIntentService extends JobIntentService {
 
         Intent localIntent = new Intent(Constants.BROADCAST_ACTION)
                         // Puts the result into the Intent
-                        .putExtra(Constants.RESULT_OF_SERVICE, result);
+                        .putExtra(Constants.RESULT_OF_SERVICE, dataString);
 
         // Broadcasts the Intent to receivers in this app.
         intent.putExtra(Constants.mMESSAGE,"I love sending messages");

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/whiteColor"
     android:layout_width="@dimen/ledger_id_w"
     android:layout_height="@dimen/ledger_id_w"
     android:orientation="horizontal"
@@ -13,6 +14,7 @@
         android:orientation="vertical">
 
         <TextView
+            android:textSize="20sp"
             android:paddingLeft="@dimen/child_ledger_padding"
             android:paddingRight="@dimen/child_ledger_padding"
             android:textAlignment="center"

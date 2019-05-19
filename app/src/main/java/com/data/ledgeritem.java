@@ -6,19 +6,18 @@ import android.arch.persistence.room.PrimaryKey;
 @Entity(tableName = "ledgeritem_table")
 public class ledgeritem {
     @PrimaryKey
-    int mledgeritemid;
+    String mledgeritemid;
     int mstatus;//0:not approved, 1:approved
     String mapprovedby;//this is the authenticated parent user
-    int mvalue;
+    double mvalue;
     String mdescription;
     int mdirection;//0: deduction,1:addition
     String mcreatorid;
     String mchildrenledgerid;
-    String mchilid;//for the selected child user.
     String mdate;
 
-    public ledgeritem(int ledgeritemid, int status, String approvedby,
-                      int value, String description, int direction, String creatorid, String ledgerid, String chilid, String date) {
+    public ledgeritem(String ledgeritemid, int status, String approvedby,
+                      double value, String description, int direction, String creatorid, String ledgerid, String date) {
         mledgeritemid = ledgeritemid;
         mstatus = status;//0:not approved, 1:approved
         mapprovedby = approvedby;//this is the authenticated parent user
@@ -27,16 +26,13 @@ public class ledgeritem {
         mdirection = direction;//0: deduction,1:addition
         mcreatorid = creatorid;
         mchildrenledgerid = ledgerid;
-        mchilid = chilid;//for the selected child user.
         mdate = date;
     }
 
+    public ledgeritem(){}
+
     public void setMapprovedby(String mapprovedby) {
         this.mapprovedby = mapprovedby;
-    }
-
-    public void setMchilid(String mchilid) {
-        this.mchilid = mchilid;
     }
 
     public void setMcreatorid(String mcreatorid) {
@@ -55,7 +51,7 @@ public class ledgeritem {
         this.mchildrenledgerid = mchildrenledgerid;
     }
 
-    public void setMledgeritemid(int mledgeritemid) {
+    public void setMledgeritemid(String mledgeritemid) {
         this.mledgeritemid = mledgeritemid;
     }
 
@@ -63,11 +59,11 @@ public class ledgeritem {
         this.mstatus = mstatus;
     }
 
-    public void setMvalue(int mvalue) {
+    public void setMvalue(double mvalue) {
         this.mvalue = mvalue;
     }
 
-    public int getMledgeritemid() {
+    public String getMledgeritemid() {
         return mledgeritemid;
     }
 
@@ -83,16 +79,12 @@ public class ledgeritem {
         return mchildrenledgerid;
     }
 
-    public int getMvalue() {
+    public double getMvalue() {
         return mvalue;
     }
 
     public String getMapprovedby() {
         return mapprovedby;
-    }
-
-    public String getMchilid() {
-        return mchilid;
     }
 
     public String getMcreatorid() {

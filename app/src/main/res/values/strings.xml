@@ -6,18 +6,29 @@
     <string name="fb_login_protocol_scheme">fb371397113475275</string>
 
     <!-- Node Ref base -->
-    <string name="firebase_ref_user" translatable="false">/user/</string>
-    <string name="firebase_ref_child_ledger" translatable="false">/childrenledgers/</string>
-    <string name="firebase_ref_mchildren" translatable="false">/mchildren</string>
-    <string name="firebase_ref_mchildren_mchilLedgerItems" translatable="false">/mchilLedgerItems/</string>
 
+    <string name="firebase_ref_user" translatable="false">/user/</string>
+    <string name="firebase_ref_child_ledger" translatable="false">/childrenledgers/%s</string>
+    <string name="firebase_ref_child_ledger_total" translatable="false">/childrenledgers/%s/mledgetotal</string>
+    <string name="firebase_ref_add_shared_child_to_user" translatable="false">/user/%s/mshared/%s/</string>
+    <string name="firebase_ref_mchildren" translatable="false">/mchildren/</string>
+    <string name="firebase_ref_mparentowners">/mparentowners/</string>
+    <string name="firebase_ref_mparentowners_add">childrenledgers/%s/mparentowners/%s</string>
+    <string name="firebase_ref_mchildren_mchilLedgerItems" translatable="false">/childrenledgeritems/</string>
+    <string name="firebase_ref_mchildren_mchilLedgerItem_add" translatable="false">childrenledgers/%s/mchildledgeritems</string>
+    <string name="firebase_ref_mchildren_mchilLedgerItem_add_one" translatable="false">childrenledgeritems/%s/</string>
+    <string name="firebase_ref_mchild_ledger_get_name" translatable="false">/childrenledgers/%s/mchildname</string>
+    <string name="firebase_ref_mchild_ledger_get_unit" translatable="false">/childrenledgers/%s/munit</string>
+    <string name="firebase_ref_mchild_ledger_get_total" translatable="false">/childrenledgers/%s/mledgetotal</string>
+    <string name="firebase_ref_user_mychildren">/user/%s/mchildren/%s</string>
     <!-- Node Key base -->
     <string name="user_id_key" translatable="false">auth_user_id</string>
     <string name="firebase_key_user" translatable="false">user</string>
     <string name="firebase_key_child_ledger" translatable="false">childrenledgers</string>
     <string name="firebase_key_mchildren" translatable="false">mchildren</string>
-    <string name="firebase_key_mchildren_mchilLedgerItems" translatable="false">mchilLedgerItems</string>
+    <string name="firebase_key_mchildrenledgerid_sort" translatable="false">mchildrenledgerid</string>
 
+    <string name="firebase_key_mchildren_mchilLedgerItems" translatable="false">mchilLedgerItems</string>
     <string name="Please_provide_your_email">Please Provide your email</string>
     <string name="send_link">Send Link</string>
     <string name="say_hi">Hi! </string>
@@ -36,63 +47,31 @@
         <item>Other</item>
     </string-array>
 
-    <!-- Strings related to Settings -->
-    <!-- TODO: Remove or change this placeholder text -->
-    <!-- Example General settings -->
-    <string name="pref_header_general">General</string>
-
-    <string name="pref_title_social_recommendations">Enable social recommendations</string>
-    <string name="pref_description_social_recommendations">Recommendations for people to contact
-        based on your message history
-    </string>
-
-    <string name="pref_title_display_name">Display name</string>
-    <string name="pref_default_display_name">John Smith</string>
-
-    <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
-    <string-array name="pref_example_list_titles">
-        <item>Always</item>
-        <item>When possible</item>
-        <item>Never</item>
-    </string-array>
-    <string-array name="pref_example_list_values">
-        <item>1</item>
+    <string-array name="spinner_for_time_minutes">
+        <item>Min</item>
         <item>0</item>
-        <item>-1</item>
-    </string-array>
-
-    <!-- Example settings for Data & Sync -->
-    <string name="pref_header_data_sync">Data &amp; sync</string>
-
-    <string name="pref_title_sync_frequency">Sync frequency</string>
-    <string-array name="pref_sync_frequency_titles">
-        <item>15 minutes</item>
-        <item>30 minutes</item>
-        <item>1 hour</item>
-        <item>3 hours</item>
-        <item>6 hours</item>
-        <item>Never</item>
-    </string-array>
-    <string-array name="pref_sync_frequency_values">
+        <item>1</item>
+        <item>5</item>
+        <item>10</item>
         <item>15</item>
+        <item>20</item>
         <item>30</item>
-        <item>60</item>
-        <item>180</item>
-        <item>360</item>
-        <item>-1</item>
+        <item>45</item>
     </string-array>
-
-    <string-array name="list_preference_entries">
-        <item>Entry 1</item>
-        <item>Entry 2</item>
-        <item>Entry 3</item>
-    </string-array>
-
-    <string-array name="list_preference_entry_values">
+    <string-array name="spinner_for_time_hours">
+        <item>Hours</item>
+        <item>0</item>
         <item>1</item>
         <item>2</item>
         <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
     </string-array>
+
 
     <string-array name="multi_select_list_preference_default_value" />
 
@@ -137,5 +116,35 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="direction_plus">+</string>
+    <string name="direction_minus">-</string>
     <string name="please_select_a_ledger">Please select or create a child ledger to add this item to</string>
+    <string name="Ledger_item_description_label">Reason of this transaction</string>
+    <string name="direction">direction</string>
+    <string name="value_level">Value</string>
+    <string name="enter_decription_hint">Enter a description for this transaccion here</string>
+    <string name="zero">00.0</string>
+    <string name="today">Today</string>
+    <string name="add_description">Please add description</string>
+    <string name="add_date">Please tap to add a date for this transaction</string>
+    <string name="add_value">Add a proper value for this item</string>
+    <string name="this_will_add_money">This item will be added to child ledger</string>
+    <string name="this_will_subtract_money">This item will be subtracted from child ledger</string>
+    <string name="add_items_to_this_ledger">Add Items to this ledger to see them here, Use the plus for that</string>
+    <string name="timeUnit">Time:</string>
+    <string name="other">Other</string>
+    <string name="time_format_String">%s h %s m</string>
+    <string name="RESET_ACTIVITY_ARG">RESET_ACTIVITY</string>
+    <string name="ledgers">Children Ledgers</string>
+    <string name="login_failed">Login Has failed</string>
+    <string name="network_is_not_available">Network is NOT available</string>
+    <string name="ledger_doee_not_exist">This shared ledger does not exist</string>
+    <string name="ledger_already_exist">You already added this ledger</string>
+    <string name="h">h</string>
+    <string name="min">min</string>
+    <string name="please_open_link_onyourdevise">Please click on the link on your Android device to add a child from: %s %s</string>
+    <string name="child_added">Child added</string>
+    <string name="child_exist">Child exists</string>
+    <string name="tap_to_enter_date">Tap to enter date</string>
+
+
 </resources>

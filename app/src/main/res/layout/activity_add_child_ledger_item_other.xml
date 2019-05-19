@@ -69,6 +69,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
+
         android:text="@string/value_level"
         app:layout_constraintBottom_toBottomOf="@+id/enter_value_of_transaction_et"
         app:layout_constraintEnd_toStartOf="@+id/currency_label"

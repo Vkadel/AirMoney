@@ -18,5 +18,6 @@ public class AddChildLedgerActivityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_add_child_ledger, container, false);
+        //TODO: move activity logic here
     }
 }

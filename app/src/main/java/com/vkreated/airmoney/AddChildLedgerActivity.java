@@ -3,6 +3,7 @@ package com.vkreated.airmoney;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,10 +19,12 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.data.user;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -42,6 +45,7 @@ import java.util.Random;
 import java.util.UUID;
 
 import com.data.childledger;
+import com.utils.SendALongToast;
 
 public class AddChildLedgerActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     boolean menu_on = false;
@@ -57,18 +61,23 @@ public class AddChildLedgerActivity extends AppCompatActivity implements Adapter
     String currentChildID=null;
     TextInputEditText childNameforChange;
     Spinner spinnerForChange;
-
+    int spinnerPosition;
+    ProgressBar progressAddChild=null;
+    Context mContext;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_child_ledger);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        //TODO: add to Strings
+        toolbar.setTitle("Add A child");
         typesOfLedgers=getResources().getStringArray(R.array.spinner_for_add_child_unit);
         typeOfledgerSelected=typesOfLedgers[0];
         if (savedInstanceState == null) {
             currentUserId = getIntent().getStringExtra(USER_ID_LABEL);
         }
+        mContext=this;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         final FloatingActionButton floatingActionButtonMoreActions = (FloatingActionButton) findViewById(R.id.fabChildMoreActions);
         final FloatingActionButton floatingActionButtonDelete = (FloatingActionButton) findViewById(R.id.fabAddChildDelete);
@@ -80,6 +89,7 @@ public class AddChildLedgerActivity extends AppCompatActivity implements Adapter
         final TextView shareChildLabel = (TextView) findViewById(R.id.shareChildLabel);
         final TextInputEditText childName = (TextInputEditText) findViewById(R.id.enterChildNameTextInput);
         final Spinner spinner = (Spinner) findViewById(R.id.chooseUnitAddChildSpinner);
+        progressAddChild=(ProgressBar)findViewById(R.id.share_progressBar);
         childNameforChange=childName;
         setUpSpinner(spinner);
         spinnerForChange=spinner;
@@ -140,6 +150,7 @@ public class AddChildLedgerActivity extends AppCompatActivity implements Adapter
             public void onClick(View v) {
                 //Check that there is a name and an uploaded child before sharing
                 if(currentChildID!=null&&!childName.getText().toString().equals("")&&childName.getText()!=null){
+                    progressAddChild.setVisibility(View.VISIBLE);
                     shareAchild(currentChildID);
                 }
                 else{
@@ -149,7 +160,6 @@ public class AddChildLedgerActivity extends AppCompatActivity implements Adapter
 
             }
         });
-
         //This button will clear the child name
         floatingActionButtonDelete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -185,8 +195,7 @@ public class AddChildLedgerActivity extends AppCompatActivity implements Adapter
     private void clearEntry(){
         childNameforChange.setText("");
         currentChildID=null;
-        int position=spinnerForChange.getSelectedItemPosition();
-        //spinnerForChange.setSelection(0);
+        spinnerPosition=spinnerForChange.getSelectedItemPosition();
     }
 
     void animationFabOut(FloatingActionButton fab, int distance) {
@@ -265,7 +274,8 @@ public class AddChildLedgerActivity extends AppCompatActivity implements Adapter
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         final int random=new Random().nextInt();
         //TODO: STRING
-        final DatabaseReference myRef = database.getReference(getResources().getString(R.string.firebase_ref_user) + currentUserId + "/mchildren/"+currentUserId+random+childName+typeOfledgerSelected);
+        final DatabaseReference myRef = database.getReference(getResources().getString(R.string.firebase_ref_user) + currentUserId +
+                getResources().getString(R.string.firebase_ref_mchildren) +currentUserId+random+childName+spinnerForChange.getSelectedItemPosition());
         // Read from the database
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -280,14 +290,15 @@ public class AddChildLedgerActivity extends AppCompatActivity implements Adapter
                 //Add Child if Child does not exist
                 if(doesThisLedgerExists==null){
                     myRef.removeEventListener(this);
-                    setUpChildLedger(String.valueOf(random), mchildName, currentUserId,childName,typeOfledgerSelected);
+                    setUpChildLedger(String.valueOf(random), mchildName, currentUserId,childName,String.valueOf(spinnerForChange.getSelectedItemId()));
                     myRef.setValue(getResources().getString(R.string.mtrue));
-                    //TODO:STRING
-                    sendLongToast("Child added");
+
+                    new SendALongToast(mContext,getResources().getString(R.string.child_added)).show();
                     }
                 else {
-                    //TODO:STRING
-                    sendLongToast("Child exists");
+
+                    new SendALongToast(mContext,getResources().getString(R.string.child_exist)).show();
+
                 }
 
                 Log.d(TAG, "Value is: " + doesThisLedgerExists);
@@ -304,18 +315,23 @@ public class AddChildLedgerActivity extends AppCompatActivity implements Adapter
     }
 
     void setUpChildLedger(String append, String childname, String currentUserId,String childName,String typeOfledgerSelected) {
+        //TODO: Create a runnable and use a threadpool executor
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         Map<String, String> mparentowners= new HashMap<>();
+
         mparentowners.put(currentUserId,getResources().getString(R.string.mtrue));
-        childledger childledgerToAdd = new childledger(Integer.valueOf(append),mparentowners,"", childname, 0,typeOfledgerSelected,null,null);
-        DatabaseReference myRefChildLedger = database.getReference(getResources().getString(R.string.firebase_ref_child_ledger) + currentUserId + append+childName+typeOfledgerSelected);
+        final String ledgerId= currentUserId + append+childName+typeOfledgerSelected;
+        ledgerId.trim();
+
+        childledger childledgerToAdd = new childledger(ledgerId,mparentowners,"", childname, 0,typeOfledgerSelected,null);
+        DatabaseReference myRefChildLedger = database.getReference(getResources().getString(R.string.firebase_ref_child_ledger,ledgerId));
         myRefChildLedger.setValue(childledgerToAdd);
-        //Add this Parent to child owners
-        DatabaseReference myRefChildLedgerParentOwners = database.getReference(getResources().getString(R.string.firebase_ref_child_ledger) + currentUserId + append+childName+typeOfledgerSelected+"/mparentowners/"+currentUserId);
-        myRefChildLedgerParentOwners.setValue(getResources().getString(R.string.mtrue));
+
+        //Add this child to parent mychildren
+        final DatabaseReference mchildrenRef=database.getReference(getResources().getString(R.string.firebase_ref_user_mychildren,currentUserId,ledgerId));
+        mchildrenRef.setValue(getResources().getString(R.string.mtrue));
         currentChildID=myRefChildLedger.getKey();
     }
-
 
     //Methods needed to make spinner react to user input
     @Override
@@ -337,9 +353,11 @@ public class AddChildLedgerActivity extends AppCompatActivity implements Adapter
         //TODO find A way to send just the shared link: +"
         //TODO: use resources for the link strings
         String link = "https://airmoney.page.link/?invitedby=" + uid+"&sharedledger="+childLedgerId+"&key="+ranKey;
-        FirebaseDynamicLinks.getInstance().createDynamicLink()
+        String domain = "https://airmoney.page.link";
+        FirebaseDynamicLinks.getInstance()
+                .createDynamicLink()
                 .setLink(Uri.parse(link))
-                .setDomainUriPrefix("https://airmoney.page.link")
+                .setDomainUriPrefix(domain)
                 .setAndroidParameters(
                         new DynamicLink.AndroidParameters.Builder().build())
                 .buildShortDynamicLink()
@@ -348,7 +366,7 @@ public class AddChildLedgerActivity extends AppCompatActivity implements Adapter
                     public void onSuccess(ShortDynamicLink shortDynamicLink) {
                         mInvitationUrl = shortDynamicLink.getShortLink();
                         sendInvitation();
-                        // ...
+
                     }
                 });
         addShareKeyToChildLedgerNode(childLedgerId, ranKey);
@@ -364,7 +382,7 @@ public class AddChildLedgerActivity extends AppCompatActivity implements Adapter
         //final DatabaseReference myRefChildLedger = database.getReference(getResources().getString(R.string.firebase_ref_child_ledger) +childLedgerId+"/mSharedKeys/"+ranKey);
 
         final DatabaseReference myRefChildLedger = database
-                .getReference(getResources().getString(R.string.firebase_ref_child_ledger) +childLedgerId);
+                .getReference(getResources().getString(R.string.firebase_ref_child_ledger,childLedgerId));
 
         //Get childledger Node
         childledger childToModify;
@@ -378,17 +396,17 @@ public class AddChildLedgerActivity extends AppCompatActivity implements Adapter
 
                 //ADD ShareKey
                 childledger mchildledger=dataSnapshot.getValue(childledger.class);
-                Map<String,String> mKeys=mchildledger.getmSharedKeys();
+                Map<String,String> mKeys=mchildledger.getMshared();
                 if(mKeys==null){
                     mKeys=new HashMap<>();
                 }
                 mKeys.put(ranKey,getResources().getString(R.string.mtrue));
-                mchildledger.setmSharedKeys(mKeys);
+                mchildledger.setMshared(mKeys);
                 myRefChildLedger.setValue(mchildledger).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
 
-                        sendLongToast(getResources().getString(R.string.sentShared));
+                        new SendALongToast(mContext,getResources().getString(R.string.sentShared)).show();
                         clearEntry();
                     }
                 });
@@ -411,28 +429,19 @@ public class AddChildLedgerActivity extends AppCompatActivity implements Adapter
         String referrerName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
         String subject = String.format("%s wants to share a ledger on AirMoney!", referrerName);
         String invitationLink = mInvitationUrl.toString();
-        String msg = "Please click on the link on your Android device to add a child from: "+referrerName+" "
-                + invitationLink;
+        String msg = getResources().getString(R.string.please_open_link_onyourdevise,referrerName,invitationLink);
         String msgHtml = String.format("I want to share a child ledger with you: "
                 + "%s\"", invitationLink);
 
         //TODO: delete Email only intent
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_TEXT, msgHtml.toString());
+        intent.putExtra(Intent.EXTRA_TEXT, msg);
+        intent.putExtra(Intent.EXTRA_HTML_TEXT,msgHtml);
         //TODO: Add text to Strings
         intent.putExtra(Intent.EXTRA_SUBJECT, "Invitation From: "+referrerName);
+        progressAddChild.setVisibility(View.GONE);
         startActivity(Intent.createChooser(intent, "Share Link"));
-
-        /*if (intent.resolveActivity(getPackageManager()) != null) {
-            startActivity(intent);
-        }*/
-    }
-    private void sendLongToast(String message) {
-        Toast toast=Toast.makeText(getApplication(),message,Toast.LENGTH_LONG);
-        TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
-        if( v != null) v.setGravity(Gravity.CENTER);
-        toast.show();
     }
 
 }

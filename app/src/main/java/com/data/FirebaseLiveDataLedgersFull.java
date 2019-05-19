@@ -43,6 +43,7 @@ import com.google.firebase.database.ValueEventListener;
 
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
+            String ref=dataSnapshot.getRef().toString();
             if(dataSnapshot!=null){
             Log.d(LOG_TAG, "onDataChange");
             Log.d(LOG_TAG, "onDataChange this is the data: "+dataSnapshot.getValue().toString());

@@ -5,7 +5,6 @@ import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverters;
 import android.support.annotation.Nullable;
 
-import java.util.List;
 import java.util.Map;
 
 import com.converters.dateConverter;
@@ -15,42 +14,37 @@ import com.converters.stringArrayToString;
 @TypeConverters({dateConverter.class, stringArrayToString.class})
 public class childledger {
     @PrimaryKey
-    private int mledgerid;
+    private String mledgerid;
     public Map<String, String> mparentowners;
     private String mchildid;
     private String mchildname;
-    private int mledgetotal;//may exclude from data to post to server and my want to have only at app level
-    private String munit;
-    private Map<String, String> mSharedKeys;
-    private Map<String,String> mchilLedgerItems;
+    private String munit; //1:Money  2:Time  3:Other
+    private Map<String, String> mshared;
+    private double mledgetotal;//may exclude from data to post to server and my want to have only at app level
+    //if Time this will be the total of minutes. To later be converted to hours.
 
 
-    public childledger(int id, Map<String, String> parentowners, String childid, String childname, int ledgetotal, String unit, Map<String, String> sharedwith, Map<String,String> chilLedgerItems ){
+    public childledger(String id, Map<String, String> parentowners, String childid,
+                       String childname, double ledgetotal, String unit,
+                       Map<String, String> sharedwith ){
         this.mledgerid =id;
         mparentowners=parentowners;
         mchildid=childid;
         mchildname=childname;
         mledgetotal=ledgetotal;
         munit=unit;
-        mSharedKeys =sharedwith;
-        mchilLedgerItems=chilLedgerItems;
+        mshared =sharedwith;
+
     }
-    public childledger(int id, String childid, String childname, int ledgetotal,String unit,Map<String, String> sharedwith){
+    public childledger(String id, String childid, String childname, double ledgetotal,String unit,Map<String, String> sharedwith){
         this.mledgerid =id;
         mchildid=childid;
         mchildname=childname;
         mledgetotal=ledgetotal;
         munit=unit;
-        mSharedKeys =sharedwith;
+        mshared =sharedwith;
     }
 
-    public Map<String, String> getMchilLedgerItems() {
-        return mchilLedgerItems;
-    }
-
-    public void setMchilLedgerItems(Map<String, String> mchilLedgerItems) {
-        this.mchilLedgerItems = mchilLedgerItems;
-    }
 
     @Override
     public boolean equals(@Nullable Object obj) {
@@ -59,7 +53,7 @@ public class childledger {
 
     public childledger(){}
 
-    public void setMledgerid(int mledgerid) {
+    public void setMledgerid(String mledgerid) {
         this.mledgerid = mledgerid;
     }
 
@@ -71,7 +65,7 @@ public class childledger {
         this.mchildname = mchildname;
     }
 
-    public void setMledgetotal(int mledgetotal) {
+    public void setMledgetotal(double mledgetotal) {
         this.mledgetotal = mledgetotal;
     }
 
@@ -79,11 +73,11 @@ public class childledger {
         this.mparentowners = mparentowners;
     }
 
-    public int getMledgerid() {
+    public String getMledgerid() {
         return mledgerid;
     }
 
-    public int getMledgetotal() {
+    public double getMledgetotal() {
         return mledgetotal;
     }
 
@@ -107,12 +101,12 @@ public class childledger {
         this.munit = munit;
     }
 
-    public Map<String, String> getmSharedKeys() {
-        return mSharedKeys;
+    public Map<String, String> getMshared() {
+        return mshared;
     }
 
-    public void setmSharedKeys(Map<String, String> mSharedKeys) {
-        this.mSharedKeys = mSharedKeys;
+    public void setMshared(Map<String, String> mshared) {
+        this.mshared = mshared;
     }
 
 }

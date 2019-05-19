@@ -68,6 +68,7 @@
         android:id="@+id/value_level_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+
         android:layout_marginEnd="8dp"
         android:text="@string/value_level"
         app:layout_constraintBottom_toBottomOf="@+id/enter_value_of_transaction_et"
@@ -78,8 +79,6 @@
         android:id="@+id/currency_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
-
         android:text="@string/currency"
         app:layout_constraintBottom_toBottomOf="@+id/enter_value_of_transaction_et"
         app:layout_constraintEnd_toStartOf="@+id/enter_value_of_transaction_et"
@@ -128,6 +127,52 @@
             android:fadingEdge="horizontal|vertical"
             android:padding="8dp"
             android:typeface="serif" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="@+id/enter_value_of_transaction_et"
+        app:layout_constraintStart_toStartOf="@+id/currency_label"
+        app:layout_constraintTop_toBottomOf="@+id/ledger_item_description_tv">
+
+        <Spinner
+            android:id="@+id/spinner_hours"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:entries="@array/spinner_for_time_hours"
+            android:textAlignment="viewEnd" />
+
+        <TextView
+
+            android:id="@+id/hours_label_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:text="@string/h" />
+
+        <Spinner
+
+            android:id="@+id/spinner_minutes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:entries="@array/spinner_for_time_minutes"
+            android:textAlignment="viewEnd" />
+
+        <TextView
+            android:id="@+id/minutes_label_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/min" />
 
     </LinearLayout>
 

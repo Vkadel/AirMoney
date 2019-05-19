@@ -15,11 +15,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".AddChildLedgerItem"></activity>
+        <activity android:name=".AddChildLedgerItem" />
         <activity
+            android:parentActivityName=".LoginActivity"
             android:name=".ChildrenLedgerListActivity"
             android:label="@string/title_activity_children_ledger"
             android:theme="@style/AppTheme.NoActionBar" />
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value=".LoginActivity" />
         <activity android:name=".AddChildFromDeepLink" />
         <activity
             android:name=".AddChildLedgerActivity"
@@ -46,14 +50,6 @@
                     android:host="airmoney.page.link/"
                     android:scheme="https" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings"
-            android:parentActivityName=".LoginActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.vkreated.airmoney.LoginActivity" />
         </activity>
         <!--
             Because android:exported is set to "false",

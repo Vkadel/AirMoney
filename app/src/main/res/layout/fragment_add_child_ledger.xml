@@ -7,6 +7,23 @@
     tools:context=".AddChildLedgerActivityFragment"
     tools:showIn="@layout/activity_add_child_ledger">
 
+    <ProgressBar
+        android:visibility="gone"
+        android:id="@+id/share_progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/logo_add_child"
+        app:layout_constraintVertical_bias="0.89" />
+
     <ImageView
         android:id="@+id/logo_add_child"
         android:layout_width="@dimen/logo_size_small"

@@ -4,28 +4,30 @@ import android.arch.lifecycle.ViewModel;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Log;
 
-import com.data.FirebaseLiveDataLedgers;
-import com.google.firebase.auth.FirebaseAuth;
+import com.data.FirebaseLiveDataLedgersAll;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.vkreated.airmoney.R;
 
 //This ViewModel will be dedicated to download ledger Info and ledger Items
 //This Viewmodel pulls items currently under the USER profile mchildren
 //
-public class ledgersViewModel extends ViewModel {
+public class ledgersViewModelAllLedgers extends ViewModel {
     final static String TAG = "ledgersViewModel";
 
 
-    public FirebaseLiveDataLedgers getLedgers(final Context context) {
+    public FirebaseLiveDataLedgersAll getLedgers(final Context context, String ledgerid) {
         //No point on creating a paged List here since it will not be able to provide realtime updates
-        final  String userChildrenLedgerListPath =context.getString(R.string.firebase_ref_user)+ FirebaseAuth.getInstance().getCurrentUser()
-                .getUid()+context.getString(R.string.firebase_ref_mchildren);
+        final String userChildrenLedgerListPathFull =context.getString(R.string.firebase_ref_mchildren_mchilLedgerItems);
         final DatabaseReference LEDGERS_REF =
-                FirebaseDatabase.getInstance().getReference(userChildrenLedgerListPath);
-
-        FirebaseLiveDataLedgers childLedgersData=new FirebaseLiveDataLedgers(LEDGERS_REF,context);
+                FirebaseDatabase.getInstance().getReference(userChildrenLedgerListPathFull);
+        Query myquery=LEDGERS_REF.orderByChild(context.getString(R.string.firebase_key_mchildrenledgerid_sort))
+                .equalTo(ledgerid);
+        FirebaseLiveDataLedgersAll childLedgersData=new FirebaseLiveDataLedgersAll(myquery,context);
+        Log.e(TAG, "ledgersViewModelFull: "+userChildrenLedgerListPathFull.toString() );
         return childLedgersData;
     }
 

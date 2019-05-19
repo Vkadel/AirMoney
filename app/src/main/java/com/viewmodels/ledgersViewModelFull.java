@@ -22,7 +22,7 @@ public class ledgersViewModelFull extends ViewModel {
 
     public FirebaseLiveDataLedgersFull getLedgers(final Context context, String ledgerid) {
         //No point on creating a paged List here since it will not be able to provide realtime updates
-        final String userChildrenLedgerListPathFull =context.getString(R.string.firebase_ref_child_ledger)+ ledgerid;
+        final String userChildrenLedgerListPathFull =context.getString(R.string.firebase_ref_child_ledger,ledgerid);
         final DatabaseReference LEDGERS_REF =
                 FirebaseDatabase.getInstance().getReference(userChildrenLedgerListPathFull);
 

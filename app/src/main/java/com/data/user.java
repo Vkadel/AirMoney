@@ -35,10 +35,10 @@ public class user {
     String mledger_id;
     @ColumnInfo(name = "mchildren")
     public Map<String, String> mchildren;
-    private List<String> mShared;
+    private Map<String, String> mshared;
 
 
-    public user(String id,int usertype,String name,String authid,String email,String ledger_id,Map<String, String> children,List<String> shared){
+    public user(String id,int usertype,String name,String authid,String email,String ledger_id,Map<String, String> children,Map<String, String> shared){
         this.mid=id;
         this.musertype=usertype;//it can be child,parent,admin
         this.mauthid=authid;
@@ -46,7 +46,7 @@ public class user {
         this.memail=email;
         this.mledger_id=ledger_id;
         this.mchildren=children;
-        mShared=shared;
+        mshared=shared;
     }
 
     //Constructor for Login screen
@@ -58,7 +58,7 @@ public class user {
         this.memail=email;
         this.mledger_id=ledger_id;
         this.mchildren=children;
-        mShared=null;
+        mshared=null;
     }
     public user(){}
 
@@ -72,16 +72,16 @@ public class user {
         result.put("memail", memail);
         result.put("mledger_id", mledger_id);
         result.put("mchildren", mchildren);
-        result.put("mShared", mShared);
+        result.put("mShared", mshared);
         return result;
     }
 
-    public List<String> getmShared() {
-        return mShared;
+    public Map<String, String> getmShared() {
+        return mshared;
     }
 
-    public void setmShared(List<String> mShared) {
-        this.mShared = mShared;
+    public void setmShared(Map<String, String>mShared) {
+        this.mshared = mShared;
     }
 
     public void setMauthid(String mauthid) {

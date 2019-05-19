@@ -10,4 +10,7 @@
     <dimen name="child_ledger_padding">4dp</dimen>
     <dimen name="div_thickness">1dp</dimen>
     <dimen name="ledger_id_name_w">95dp</dimen>
+    <dimen name="ledger_item_desc_max_text_size">16sp</dimen>
+    <dimen name="symbol_size_text_direction">32sp</dimen>
+    <dimen name="smaller_item_text_size">4sp</dimen>
 </resources>

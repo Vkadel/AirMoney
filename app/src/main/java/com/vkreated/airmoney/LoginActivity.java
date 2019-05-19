@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -42,12 +41,16 @@ import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
 import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.data.childledger;
 import com.data.user;
+import com.utils.SendALongToast;
 
 public class LoginActivity extends AppCompatActivity {
+    private static Boolean sharedChildissetup=false;
     private static int RC_SIGN_IN = 100;
     TextView sayHiTV;
     FirebaseUser currentUser;
@@ -59,9 +62,12 @@ public class LoginActivity extends AppCompatActivity {
     private Activity mActivity;
     private Button goToLedgersBut;
     private FirebaseDatabase myDatabase;
-
+    private static boolean isPersisting = false;
+    static Context mContext;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //Set up local storage to avoid downloading information that has not changed
+
         super.onCreate(savedInstanceState);
         Log.d(TAG, "OnCreate");
         checkForDynamicLink();
@@ -71,11 +77,18 @@ public class LoginActivity extends AppCompatActivity {
         sayHiTV.setVisibility(View.INVISIBLE);
         mCredentialsClient = Credentials.getClient(this);
         mActivity=this;
+        mContext=this;
+        if(!isPersisting){
+            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+            isPersisting=true;
+        }
+
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
 
         //Check if returning from another activity
         if(getIntent().hasExtra(AddChildLedgerActivity.CURRENT_USER_ID)){
+
         currentUserAuthenticatedID=getIntent().getStringExtra(AddChildLedgerActivity.CURRENT_USER_ID);}
 
 
@@ -100,8 +113,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        //Set up local storage to avoid downloading information that has not changed
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+
 
     }
 
@@ -182,14 +194,15 @@ public class LoginActivity extends AppCompatActivity {
             IdpResponse response = IdpResponse.fromResultIntent(data);
 
             if (resultCode == RESULT_OK) {
-                sendLongToast(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+                new SendALongToast(this,getResources().getString(R.string.say_hi)+
+                        FirebaseAuth.getInstance().getCurrentUser().getDisplayName()).show();
                 // Successfully signed in
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 Log.e(TAG, "this user: " + user.getDisplayName());
                 updateUI(user);
                 // ...
             } else {
-                sendLongToast("login has failed");
+                new SendALongToast(this,getResources().getString(R.string.login_failed)).show();
                 // Sign in failed. If response is null the user canceled the
                 // sign-in flow using the back button. Otherwise check
                 // response.getError().getErrorCode() and handle the error.
@@ -297,6 +310,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     //Check if the user has a dynamic Link
+    //TODO: Might want to make this a service
     void checkForDynamicLink() {
         FirebaseDynamicLinks.getInstance()
                 .getDynamicLink(getIntent())
@@ -335,15 +349,35 @@ public class LoginActivity extends AppCompatActivity {
         //TODO: Add current user to mparentowners on childrenledgers node.
         //Problem: How to edit the node if the parent is not there already
         //Perhaps use the original node owner id
-        addChildtoUserOwned(sharedledger);
-        addUsertoChildOwners(sharedledger,key,user);
+        //Ensure the Child setup sequence is only called once
+        if(!sharedChildissetup){
+        addChildtoUserOwned(sharedledger,key);}
+
     }
 
-    private void addChildtoUserOwned(String sharedledger) {
+    private void addChildtoUserOwned(final String sharedledger, final String key) {
         final String thisChildLedger=sharedledger;
         final String userid = currentUser.getUid();
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+        //Add key to shared to be able to read the childnode
+        final DatabaseReference myRefKey = database.getReference(getResources().getString(R.string.firebase_ref_add_shared_child_to_user,userid,sharedledger));
+        myRefKey.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                //Get current Owned Childrenledgers by this user
+                String valueChildrenString = dataSnapshot.getValue(String.class);
+                //Add First Childledger
+                myRefKey.removeEventListener(this);
+                myRefKey.setValue(key);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
         //TODO: Change /mchildren to Stringed ref
+        //Add this ledger  to userLedgers
         final DatabaseReference myRef = database.getReference(getResources().getString(R.string.firebase_ref_user) + userid + "/mchildren/"+sharedledger);
 
         myRef.addValueEventListener(new ValueEventListener() {
@@ -354,32 +388,33 @@ public class LoginActivity extends AppCompatActivity {
                 //Add First Childledger
                     myRef.removeEventListener(this);
                     myRef.setValue(getResources().getString(R.string.mtrue));
-                    //sendLongToast();
-
+                //Add this child to parent mychildren
+                final DatabaseReference mchildrenRef=database.getReference(getResources().getString(R.string.firebase_ref_mparentowners_add,sharedledger,userid));
+                mchildrenRef.setValue(getResources().getString(R.string.mtrue));
+                new SendALongToast(mContext,getResources().getString(R.string.child_added)).show();
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });
 
-    }
+        //Add this user to children Owners
+        final DatabaseReference myRefChildLedgerParentOwners =
+                database.getReference(getResources().getString(R.string.firebase_ref_child_ledger,sharedledger));
 
-    private void addSharedKeytoUser(String sharedledger) {
-        final String thisChildLedger=sharedledger;
-        final String userid = currentUser.getUid();
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        final DatabaseReference myRef = database.getReference(getResources().getString(R.string.firebase_ref_user) + userid + "/sharedwithme/");
-        myRef.addValueEventListener(new ValueEventListener() {
+        myRefChildLedgerParentOwners.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                //Get current Owned Childrenledgers by this user
-                String valueChildrenString = dataSnapshot.getValue(String.class);
-                    myRef.removeEventListener(this);
-                    myRef.setValue(thisChildLedger);
-                    //sendLongToast();
-
+                myRefChildLedgerParentOwners.removeEventListener(this);
+                Map<String ,String> myOwners;
+                childledger thisChildLeger=dataSnapshot.getValue(childledger.class);
+                myOwners=thisChildLeger.getMparentowners();
+                myOwners.put(userid,getResources().getString(R.string.mtrue));
+                //Update Value
+                thisChildLeger.setMparentowners(myOwners);
+                DatabaseReference setChild=database.getReference(getResources().getString(R.string.firebase_ref_child_ledger,sharedledger));
+                sharedChildissetup=true;
             }
 
             @Override
@@ -390,47 +425,6 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void addUsertoChildOwners(String sharedledger, String key, final FirebaseUser user) {
-            //Add this userId to owners for this childledger
-            final FirebaseDatabase database = FirebaseDatabase.getInstance();
-            //TODO: IMPORTANT check a way to authenticate with the KEY
-            final DatabaseReference myRef = database
-                    .getReference(getResources().getString(R.string.firebase_ref_child_ledger) + sharedledger);
-            myRef.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    //Get Value from parents and add the new owner
-                    myRef.removeEventListener(this);
-                    final childledger mSharedChildledger=dataSnapshot.getValue(childledger.class);
-                    if(mSharedChildledger==null){
-                        //TODO: add string
-                        sendLongToast("This shared ledger does not exist");
-                        return;
-                    }
-                    //Check if shared Owner exists
-                    if(mSharedChildledger.mparentowners.containsKey(currentUser.getUid())){
-                       sendLongToast("you already added this ledger");
-                    }
-                    //Child ledger does not exists, then add
-                    else {
-                        myRef.setValue(mSharedChildledger).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                sendLongToast(String.format(getResources().getString(R.string.succesful_child_set_up), mSharedChildledger.getMchildname()));
-                                mSharedChildledger.setmSharedKeys(null);
-                            }
-                        });
-
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-
-            }
 
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
@@ -451,12 +445,12 @@ public class LoginActivity extends AppCompatActivity {
         ConnectivityManager.NetworkCallback mCallback=new ConnectivityManager.NetworkCallback(){
             @Override
             public void onAvailable(Network network) {
-                sendLongToast(getResources().getString(R.string.have_internet));
+                new SendALongToast(getApplicationContext(),getResources().getString(R.string.have_internet)).show();
                 mActivity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         //TODO: anything that you want to DO if there is a connection
-                        sendLongToast("network is available");
+                        new SendALongToast(getApplicationContext(),getResources().getString(R.string.have_internet)).show();
                     }
                 });
                 super.onAvailable(network);
@@ -464,13 +458,13 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onLost(Network network) {
-                sendLongToast(getResources().getString(R.string.lost_connection));
+                new SendALongToast(getApplicationContext(),getResources().getString(R.string.lost_connection)).show();
                 Log.e(TAG, "onAvailable: "+"sent connectionlost toast");
                 mActivity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         //TODO: anything that you want to DONT if there is a connection
-                        sendLongToast("network is NOT available");
+                        new SendALongToast(getApplicationContext(),getResources().getString(R.string.network_is_not_available)).show();
                     }
                 });
                 super.onLost(network);
@@ -479,11 +473,6 @@ public class LoginActivity extends AppCompatActivity {
         //Asking to be notified of connect/disconnects from internet
         connectivityManager.registerNetworkCallback(networkRequest,mCallback);
     }
-    private void sendLongToast(String message) {
-        Toast toast=Toast.makeText(getApplication(),message,Toast.LENGTH_LONG);
-        TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
-        if( v != null) v.setGravity(Gravity.CENTER);
-        toast.show();
-    }
+
 
 }

@@ -1,32 +1,35 @@
 package com.vkreated.airmoney;
 
+import android.app.Activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.data.childledger;
 import com.data.ledgeritem;
 import com.google.firebase.database.DataSnapshot;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.viewmodels.ledgersViewModelFull;
+import com.utils.ConvertMinsToStringSec;
+import com.viewmodels.ledgersViewModelAllLedgers;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Consumer;
 
 
 /**
@@ -43,20 +46,23 @@ public class ledgerItemListFragment extends Fragment {
      * represents.
      */
     public static final String ARG_LEDGER_ID = "ledger_id";
-
+    final static public String LEDGER_TYPE_ARG = "ledger_type";
     // TODO: Rename and change types of parameters
+
     private String mItemId;
-    private ledgersViewModelFull mViewModel;
-    private static String TAG="ledgerItemListFragment";
+    private ledgersViewModelAllLedgers mViewModel;
+    private static String TAG = "ledgerItemListFragment";
     private OnFragmentInteractionListener mListener;
+    private ChildrenItemLedgerAdapter adapter;
+    private RecyclerView recyclerView;
+    private String mLedgertype;
 
     public ledgerItemListFragment() {
         // Required empty public constructor
     }
 
-
     // TODO: Rename and change types and number of parameters
-    public static ledgerItemListFragment newInstance(String itemId) {
+    public static ledgerItemListFragment newInstance(String itemId, int ledgerType) {
         ledgerItemListFragment fragment = new ledgerItemListFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
@@ -67,35 +73,51 @@ public class ledgerItemListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-           mItemId = getArguments().getString(ARG_LEDGER_ID);
+            mItemId = getArguments().getString(ARG_LEDGER_ID);
+            mLedgertype = getArguments().getString(LEDGER_TYPE_ARG);
         }
 
         //Subscribed to model
-        mViewModel = ViewModelProviders.of(this).get(ledgersViewModelFull.class);
+        mViewModel = ViewModelProviders.of(this).get(ledgersViewModelAllLedgers.class);
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mViewModel.getLedgers(getContext(),mItemId).observe(this, new Observer<DataSnapshot>() {
+        View myRootLayout = inflater.inflate(R.layout.fragment_ledger_item_list, container, false);
+
+        // Inflate the layout for this fragment
+        return myRootLayout;
+
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        recyclerView = view.findViewById(R.id.ledgeritem_list_recycler);
+
+        mViewModel.getLedgers(getContext(), mItemId).observe(this, new Observer<DataSnapshot>() {
             @Override
             public void onChanged(@Nullable DataSnapshot dataSnapshot) {
                 childledger mChildLedger;
-                mChildLedger=convertDataSnapShotToChildLedger(dataSnapshot);
+                final List<ledgeritem> myListofItems = new ArrayList<>();
+                dataSnapshot.getChildren().forEach(new Consumer<DataSnapshot>() {
+                    @Override
+                    public void accept(DataSnapshot dataSnapshot) {
+                        ledgeritem mledgeritem = dataSnapshot.getValue(ledgeritem.class);
+                        if (!myListofItems.contains(mledgeritem)) {
+                            myListofItems.add(mledgeritem);
+                        }
 
-                if(mChildLedger.getMchilLedgerItems()==null){
-                    sendLongToast("Add Items to this ledger to see them here, Use the plus for that");
-                }else if(!mChildLedger.getMchilLedgerItems().isEmpty()){
-                    //TODO: Display Items
-
-                }
-
+                    }
+                });
+                adapter = new ChildrenItemLedgerAdapter(myListofItems, getContext(), mLedgertype);
+                recyclerView.setAdapter(adapter);
             }
-        });
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_ledger_item_list, container, false);
 
+        });
+
+        super.onViewCreated(view, savedInstanceState);
     }
 
     private childledger convertDataSnapShotToChildLedger(@Nullable DataSnapshot dataSnapshot) {
@@ -104,7 +126,7 @@ public class ledgerItemListFragment extends Fragment {
         final GsonBuilder gsonBuilder = new GsonBuilder();
         final Gson gson = gsonBuilder.create();
         childledger parsedChildLedger = gson.fromJson(jsonString, childledger.class);
-        return parsedChildLedger ;
+        return parsedChildLedger;
     }
 
 
@@ -143,33 +165,42 @@ public class ledgerItemListFragment extends Fragment {
     public static class ChildrenItemLedgerAdapter extends RecyclerView.Adapter<ChildrenItemLedgerAdapter.MyViewHolder> {
         List<ledgeritem> mDataset;
         Context mContext;
+        String mLedgertype;
 
         // Provide a reference to the views for each data item
         // Complex data items may need more than one view per item, and
         // you provide access to all the views for a data item in a view holder
         public static class MyViewHolder extends RecyclerView.ViewHolder {
             // each data item is just a string in this case
-            public TextView textView;
+            public TextView description_tv;
+            public TextView my_item_value_tv;
+            public TextView symbol_tv;
+            public TextView direction_tv;
+
+
             public MyViewHolder(View v) {
                 super(v);
-                textView = v.findViewById(R.id.child_ledger_name);
+                description_tv = v.findViewById(R.id.short_ledger_item_description_label_tv);
+                my_item_value_tv = v.findViewById(R.id.ledger_item_value);
+                symbol_tv = v.findViewById(R.id.ledger_item_currency);
+                direction_tv = v.findViewById(R.id.ledger_item_direction_tv);
             }
         }
 
         // Provide a suitable constructor (depends on the kind of dataset)
-        public ChildrenItemLedgerAdapter(List<ledgeritem> myDataset, Context context) {
+        public ChildrenItemLedgerAdapter(List<ledgeritem> myDataset, Context context, String ledgertype) {
             mDataset = myDataset;
-            mContext= context;
-
+            mContext = context;
+            mLedgertype = ledgertype;
         }
 
         // Create new views (invoked by the layout manager)
         @Override
         public MyViewHolder onCreateViewHolder(ViewGroup parent,
-                                                                                                int viewType) {
+                                               int viewType) {
             // create a new view
-            View v =  LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.child_ledger_for_list, parent, false);
+            View v = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.ledgeritem_list_item, parent, false);
             MyViewHolder vh = new MyViewHolder(v);
             return vh;
         }
@@ -179,9 +210,61 @@ public class ledgerItemListFragment extends Fragment {
         public void onBindViewHolder(final ChildrenItemLedgerAdapter.MyViewHolder holder, int position) {
             // - get element from your dataset at this position
             // - replace the contents of the view with that element
-            final int positionFinal=position;
-            holder.textView.setText("set");
+            final int positionFinal = position;
+            String description = mDataset.get(position).getMdescription();
 
+
+            //Resize the description_tv
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            Activity myActivity = (Activity) mContext;
+            myActivity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+
+            int width = displayMetrics.widthPixels;
+            ViewGroup.LayoutParams params = (ViewGroup.LayoutParams) holder.description_tv.getLayoutParams();
+
+            double widthtrans = 0;
+
+            switch (Integer.parseInt(mLedgertype)) {
+                case 1:
+                    //money Ledger Item
+                    holder.my_item_value_tv.setText(String.valueOf(mDataset.get(position).getMvalue()));
+                    widthtrans = width / 2.45;
+                    break;
+
+                case 2:
+                    //Time Ledger
+                    holder.my_item_value_tv.setText(new ConvertMinsToStringSec(mDataset.get(position)
+                            .getMvalue(), mContext).getTheTime().toString());
+                    holder.my_item_value_tv.setTextSize(mContext.getResources().getDimension(R.dimen.smaller_item_text_size));
+                    holder.symbol_tv.setText("");
+                    widthtrans = width / 2.7;
+
+                    break;
+                case 3:
+                    holder.my_item_value_tv.setText(String.valueOf(mDataset.get(position).getMvalue()));
+                    holder.symbol_tv.setText("");
+                    break;
+                default:
+                    holder.my_item_value_tv.setText(String.valueOf(mDataset.get(position).getMvalue()));
+                    widthtrans = width / 2.45;
+                    break;
+
+            }
+            params.width = (int) widthtrans;
+            holder.description_tv.setLayoutParams(params);
+            //Readjusting what its shown on the unit and value
+            holder.description_tv.setText(description);
+            setUpdirection(holder, position);
+        }
+
+        private void setUpdirection(MyViewHolder holder, int position) {
+            int mydirection = mDataset.get(position).getMdirection();
+            if (mydirection == 1) {
+                holder.direction_tv.setText(mContext.getResources().getString(R.string.direction_plus));
+            }
+            if (mydirection == 0) {
+                holder.direction_tv.setText(mContext.getResources().getString(R.string.direction_minus));
+            }
         }
 
         // Return the size of your dataset (invoked by the layout manager)
@@ -190,10 +273,5 @@ public class ledgerItemListFragment extends Fragment {
             return mDataset.size();
         }
     }
-    private void sendLongToast(String message) {
-        Toast toast=Toast.makeText(getContext(),message,Toast.LENGTH_LONG);
-        TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
-        if( v != null) v.setGravity(Gravity.CENTER);
-        toast.show();
-    }
+
 }
