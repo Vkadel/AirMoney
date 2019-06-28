@@ -178,8 +178,6 @@ public class AddChildLedgerItem extends AppCompatActivity {
         ledgerId.trim();
         final int direction = getDirection();
 
-        //TODO: Change Ledger Total before logging item
-
         //Get current Total
         final String myReftoChangeTotalString = getResources().getString(R.string.firebase_ref_child_ledger_total, ledgerId);
         final DatabaseReference myReftoChangeTotal = FirebaseDatabase.getInstance().getReference(myReftoChangeTotalString);

@@ -128,8 +128,10 @@ public class ChildrenLedgerListActivity extends AppCompatActivity {
         myIteration.clear();
         setContentView(R.layout.activity_children_ledger_list);
         Toolbar toolbar =(Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(getResources().getString(R.string.ledgers));
         setSupportActionBar(toolbar);
         ActionBar ab = getSupportActionBar();
+
         ab.setDisplayHomeAsUpEnabled(true);
 
         myTestTv=findViewById(R.id.my_Total);
@@ -307,6 +309,7 @@ public class ChildrenLedgerListActivity extends AppCompatActivity {
             holder.cell.setBackgroundColor(mContext.getColor(R.color.whiteColor));
             holder.childLedgerNameTV.setText(mDataset.get(position).getMchildname());
             int check=Integer.parseInt(mDataset.get(position).getMunit());
+
             switch (check){
                 default:
                     //This is a money Ledger
@@ -334,9 +337,11 @@ public class ChildrenLedgerListActivity extends AppCompatActivity {
             holder.childLedgerNameTV.setOnClickListener(listener);
             holder.symbolTV.setOnClickListener(listener);
             if(selectedItemID==mDataset.get(position).getMledgerid()){
+                //Highlight cell and invert color for text
                 holder.cell.setBackgroundColor(mContext.getColor(R.color.colorAccent));
+                holder.childLedgerNameTV.setTextColor(mContext.getResources().getColor(R.color.whiteColor,mContext.getTheme()));
+                holder.myTotalTV.setTextColor(mContext.getResources().getColor(R.color.whiteColor,mContext.getTheme()));
             }
-
         }
 
         // Return the size of your dataset (invoked by the layout manager)
