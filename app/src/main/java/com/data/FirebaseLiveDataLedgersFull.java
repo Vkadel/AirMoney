@@ -1,7 +1,7 @@
 package com.data;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.paging.PagedList;
+import androidx.lifecycle.LiveData;
+import androidx.paging.PagedList;
 import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;

@@ -1,28 +1,20 @@
 package com.data;
 
-import android.arch.core.util.Function;
-import android.arch.lifecycle.LiveData;
-import android.arch.paging.DataSource;
-import android.arch.paging.PagedList;
+import androidx.lifecycle.LiveData;
+import androidx.paging.DataSource;
+import androidx.paging.PagedList;
 import android.content.Context;
-import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.Gravity;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.vkreated.airmoney.R;
-
-import java.util.List;
 
 
 //Reference: https://firebase.googleblog.com/2017/12/using-android-architecture-components.html

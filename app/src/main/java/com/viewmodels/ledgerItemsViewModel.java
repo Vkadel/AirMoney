@@ -1,6 +1,6 @@
 package com.viewmodels;
 
-import android.arch.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModel;
 import android.content.Context;
 
 import com.data.FirebaseLiveDataLedgersLedgerItemAdd;

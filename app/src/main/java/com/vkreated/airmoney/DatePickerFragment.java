@@ -3,8 +3,8 @@ package com.vkreated.airmoney;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
-import android.support.design.widget.TextInputEditText;
-import android.support.v4.app.DialogFragment;
+
+import androidx.fragment.app.DialogFragment;
 import android.view.Gravity;
 import android.widget.DatePicker;
 import android.widget.TextView;

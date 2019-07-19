@@ -1,14 +1,12 @@
 package com.viewmodels;
 
-import android.arch.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModel;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
-import com.data.FirebaseLiveDataLedgers;
 import com.data.FirebaseLiveDataLedgersFull;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.vkreated.airmoney.R;
