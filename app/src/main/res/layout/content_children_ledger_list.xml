@@ -6,17 +6,16 @@
     android:layout_height="wrap_content"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".ChildrenLedgerListActivity"
-    tools:showIn="@layout/activity_children_ledger_list">
-
+    tools:showIn="@layout/activity_children_ledger_list"
+    >
 
     <androidx.recyclerview.widget.RecyclerView
-        android:background="@color/colorPrimary"
-        android:padding="@dimen/div_thickness"
+        android:background="@color/whiteColor"
         android:id="@+id/list_of_children_ledgers"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"

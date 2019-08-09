@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer name="base_distance_for_fab_but_menu">120</integer>
+    <integer name="count_of_ledger_items_on_list">50</integer>
 </resources>

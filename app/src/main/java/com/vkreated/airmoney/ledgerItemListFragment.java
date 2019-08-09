@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.utils.ConvertMinsToStringSec;
+import com.utils.ResizeTextSizeBaseOnNumberSize;
 import com.viewmodels.ledgersViewModelAllLedgers;
 
 import org.json.JSONObject;
@@ -101,6 +103,7 @@ public class ledgerItemListFragment extends Fragment {
             public void onChanged(@Nullable DataSnapshot dataSnapshot) {
                 childledger mChildLedger;
                 final List<ledgeritem> myListofItems = new ArrayList<>();
+                //TODO: may want to send this work to another thread
                 dataSnapshot.getChildren().forEach(new Consumer<DataSnapshot>() {
                     @Override
                     public void accept(DataSnapshot dataSnapshot) {
@@ -116,7 +119,6 @@ public class ledgerItemListFragment extends Fragment {
             }
 
         });
-
         super.onViewCreated(view, savedInstanceState);
     }
 
@@ -227,6 +229,7 @@ public class ledgerItemListFragment extends Fragment {
             switch (Integer.parseInt(mLedgertype)) {
                 case 1:
                     //money Ledger Item
+                    new ResizeTextSizeBaseOnNumberSize(holder.my_item_value_tv,mDataset.get(position).getMvalue());
                     holder.my_item_value_tv.setText(String.valueOf(mDataset.get(position).getMvalue()));
                     widthtrans = width / 2.45;
                     break;

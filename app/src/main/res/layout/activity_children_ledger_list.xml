@@ -5,59 +5,50 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ChildrenLedgerListActivity">
+    <!--TODO:Add padding to dimens-->
+
+    <androidx.core.widget.NestedScrollView
+
+        android:id="@+id/ledgeritems_list_fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/my_app_bar_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            android:elevation="4dp"
-            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+            app:layout_scrollFlags="scroll|enterAlwaysCollapsed"/>
+        <include layout="@layout/content_children_ledger_list"
+            />
 
     </com.google.android.material.appbar.AppBarLayout>
-
-    <!--TODO:Add paddignto dimens-->
-    <LinearLayout
-        android:paddingTop="?attr/actionBarSize"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <include layout="@layout/content_children_ledger_list" />
-
-        <FrameLayout
-            android:id="@+id/ledgeritems_list_fragment_container"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="3" />
-
-
-    </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_child_ledger_item_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
+        android:layout_marginEnd="@dimen/fab_margin"
+        app:fabSize="mini"
+        android:layout_marginBottom="24dp"
         app:srcCompat="@android:drawable/ic_input_add" />
 
     <TextView
-        android:textColor="@color/whiteColor"
-        android:background="@color/colorPrimary"
-        android:textAlignment="center"
         android:id="@+id/my_Total"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center|bottom"
+        android:background="@color/transparent"
         android:text="Initial Test"
+        android:textAlignment="center"
+        android:textColor="@color/whiteColor"
         android:textSize="24sp" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

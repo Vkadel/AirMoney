@@ -28,7 +28,7 @@
     <string name="firebase_key_mchildren" translatable="false">mchildren</string>
     <string name="firebase_key_mchildrenledgerid_sort" translatable="false">mchildrenledgerid</string>
 
-    <string name="firebase_key_mchildren_mchilLedgerItems" translatable="false">mchilLedgerItems</string>
+
     <string name="Please_provide_your_email">Please Provide your email</string>
     <string name="send_link">Send Link</string>
     <string name="say_hi">Hi! </string>
@@ -145,6 +145,7 @@
     <string name="child_added">Child added</string>
     <string name="child_exist">Child exists</string>
     <string name="tap_to_enter_date">Tap to enter date</string>
+    <string name="tap_on_name">Tap name to see history</string>
 
 
 </resources>

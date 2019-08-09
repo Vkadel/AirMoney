@@ -31,6 +31,7 @@
             android:clickable="true"
             android:focusable="true"
             android:tint="@color/colorPrimary"
+            android:visibility="invisible"
             app:backgroundTintMode="src_atop"
             app:elevation="6dp"
             app:fabSize="normal"
@@ -56,16 +57,17 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/main_logo_w"
+        android:layout_height="@dimen/main_logo_w"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:contentDescription="@string/app_name"
-        android:src="@drawable/place_holder_image_logo"
+        android:src="@drawable/ic_money_cloud_108px"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_money_cloud" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

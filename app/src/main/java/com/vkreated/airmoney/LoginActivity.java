@@ -21,8 +21,17 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
+import com.data.childledger;
+import com.data.user;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
+import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.credentials.CredentialRequest;
 import com.google.android.gms.auth.api.credentials.CredentialRequestResponse;
 import com.google.android.gms.auth.api.credentials.Credentials;
@@ -39,13 +48,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
 import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
-import com.data.childledger;
-import com.data.user;
 import com.utils.SendALongToast;
 
 public class LoginActivity extends AppCompatActivity {
@@ -78,7 +80,7 @@ public class LoginActivity extends AppCompatActivity {
         mActivity=this;
         mContext=this;
         if(!isPersisting){
-            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+            /*FirebaseDatabase.getInstance().setPersistenceEnabled(true);*/
             isPersisting=true;
         }
 
@@ -118,8 +120,8 @@ public class LoginActivity extends AppCompatActivity {
 
 
     private void setUpActionBar(FirebaseUser currentUser) {
-        if (currentUser != null) {
-            getSupportActionBar().setSubtitle(currentUser.getEmail().toString());
+        if (FirebaseAuth.getInstance().getCurrentUser().getDisplayName() != null) {
+            getSupportActionBar().setSubtitle(FirebaseAuth.getInstance().getCurrentUser().getEmail().toString());
             //TODO: may need to check if a userShared items with me.
         } else {
             getSupportActionBar().setSubtitle("no user logged");
@@ -141,7 +143,7 @@ public class LoginActivity extends AppCompatActivity {
                 toast = Toast.makeText(this, "I will add a child", Toast.LENGTH_SHORT);
                 toast.show();
                 Intent gotoChildLedgerSetup = new Intent(this, AddChildLedgerActivity.class);
-                gotoChildLedgerSetup.putExtra(AddChildLedgerActivity.USER_ID_LABEL, currentUser.getUid());
+                gotoChildLedgerSetup.putExtra(AddChildLedgerActivity.USER_ID_LABEL, FirebaseAuth.getInstance().getCurrentUser().getUid());
                 startActivity(gotoChildLedgerSetup);
                 return true;
             case R.id.edit_child:
@@ -175,13 +177,13 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
+       /* // Check if user is signed in (non-null) and update UI accordingly.
         if (mAuth != null && mAuth.getCurrentUser()!=null) {
             currentUser = mAuth.getCurrentUser();
             updateUI(currentUser);
         }else{
             authenticationKickoff();
-        }
+        }*/
     }
 
     //2. When the the sign-in flow is complete, you will receive the result:

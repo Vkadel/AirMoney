@@ -1,6 +1,9 @@
 package com.vkreated.airmoney;
 
 import android.app.Activity;
+
+import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -19,6 +22,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -41,6 +45,7 @@ import com.intentservices.Constants;
 import com.intentservices.GetLedgersIntentService;
 import com.utils.ConvertMinsToStringSec;
 import com.utils.SendALongToast;
+import com.utils.SetCardBackgroundColorOnClick;
 import com.viewmodels.ledgersViewModel;
 import com.viewmodels.ledgersViewModelFull;
 
@@ -126,9 +131,10 @@ public class ChildrenLedgerListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_children_ledger_list);
         Toolbar toolbar =(Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(getResources().getString(R.string.ledgers));
+        toolbar.setTitleTextColor(getColor(R.color.whiteColor));
+        toolbar.setSubtitle(getResources().getString(R.string.tap_on_name));
         setSupportActionBar(toolbar);
         ActionBar ab = getSupportActionBar();
-
         ab.setDisplayHomeAsUpEnabled(true);
 
         myTestTv=findViewById(R.id.my_Total);
@@ -235,13 +241,15 @@ public class ChildrenLedgerListActivity extends AppCompatActivity {
             public TextView childLedgerNameTV;
             public TextView myTotalTV;
             public TextView symbolTV;
-            public LinearLayout cell;
+            public ViewGroup cell;
+            public CardView cardView;
             public MyViewHolder(View v) {
                 super(v);
                 childLedgerNameTV = v.findViewById(R.id.child_ledger_name);
                 myTotalTV=v.findViewById(R.id.child_ledger_total);
                 symbolTV=v.findViewById(R.id.currency_symbol);
                 cell=v.findViewById(R.id.my_child_ledgername_layout);
+                cardView=v.findViewById(R.id.cardview);
             }
         }
 
@@ -274,23 +282,20 @@ public class ChildrenLedgerListActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     //Get recycler View info depending on user click
-                    View parent=(View)v.getParent().getParent();
+                    View parent=(View)v.getRootView();
+                    //Change the background color
+
+                    selectedItemID=mDataset.get(positionFinal).getMledgerid();
+                    selectedTypeOfLedger=mDataset.get(positionFinal).getMunit();
                     try{
-                    RecyclerView rv=(RecyclerView) parent.getParent();
-                    rv.getAdapter().notifyDataSetChanged();}catch
-                    (Exception io){
-                        //
-                    }
-                    try{
-                        RecyclerView rv=(RecyclerView) parent.getParent().getParent();
-                        rv.getAdapter().notifyDataSetChanged();}catch
+                    RecyclerView rv=(RecyclerView) parent.findViewById(R.id.list_of_children_ledgers);
+                    rv.getAdapter().notifyDataSetChanged();}
+                    catch
                     (Exception io){
                         //
                     }
 
                     //Generate the fragment and attach it to the frame
-                    selectedItemID=mDataset.get(positionFinal).getMledgerid();
-                    selectedTypeOfLedger=mDataset.get(positionFinal).getMunit();
                     Log.d(TAG,"this item was selected:"+selectedItemID);
                     Bundle arguments = new Bundle();
                     arguments.putString(ledgerItemListFragment.ARG_LEDGER_ID, selectedItemID);
@@ -303,10 +308,11 @@ public class ChildrenLedgerListActivity extends AppCompatActivity {
 
                 }
             };
-            holder.cell.setBackgroundColor(mContext.getColor(R.color.whiteColor));
+
             holder.childLedgerNameTV.setText(mDataset.get(position).getMchildname());
             int check=Integer.parseInt(mDataset.get(position).getMunit());
 
+            //Determine which type of ledger is
             switch (check){
                 default:
                     //This is a money Ledger
@@ -330,15 +336,11 @@ public class ChildrenLedgerListActivity extends AppCompatActivity {
 
             }
 
-            holder.myTotalTV.setOnClickListener(listener);
-            holder.childLedgerNameTV.setOnClickListener(listener);
-            holder.symbolTV.setOnClickListener(listener);
-            if(selectedItemID==mDataset.get(position).getMledgerid()){
-                //Highlight cell and invert color for text
-                holder.cell.setBackgroundColor(mContext.getColor(R.color.colorAccent));
-                holder.childLedgerNameTV.setTextColor(mContext.getResources().getColor(R.color.whiteColor,mContext.getTheme()));
-                holder.myTotalTV.setTextColor(mContext.getResources().getColor(R.color.whiteColor,mContext.getTheme()));
-            }
+            holder.cardView.setOnClickListener(listener);
+            //Mark the item that was clicked
+           new SetCardBackgroundColorOnClick(holder.cardView,
+                   selectedItemID==mDataset.get(position).getMledgerid(),
+                   mContext);
         }
 
         // Return the size of your dataset (invoked by the layout manager)
